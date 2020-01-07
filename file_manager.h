@@ -3,6 +3,7 @@
 
 #include "disk_manager.h"
 #include "directory_tree.h"
+#include "pair0.h"
 
 class file_manager
 {
@@ -118,13 +119,15 @@ public:
            }
 
            // 解析文件名
-           Pair<String, String> fileName0 = FileSupporter.parseFileName(fileName);
+           pair0<QString, QString>* fileName0 = file_supporter::parseFileName(fileName);
 
            // 为文件分配一块磁盘块
-           DiskBlock newDiskBlock = diskManager.allocateDiskBlock(new byte[] {-1});
+           QByteArray newByte;
+           newByte.push_back(-1);
+           disk_block* newDiskBlock = diskManager->allocateDiskBlock(&newByte);
            // 创建文件
-           return createFile(directoryPath, fileName0.first, fileName0.second, new FileAttribute(false, system, true, false),
-                   newDiskBlock.getIndex());
+           return createFile(directoryPath, fileName0->first, fileName0->second, new file_attribute(false, system, true, false),
+                   newDiskBlock->getIndex());
        }
 
        /**
@@ -135,30 +138,32 @@ public:
         * @throws IOException IO操作出错
         * @throws IllegalOperationException 无法删除非空目录
         */
-       public void deleteFile(String path) throws IOException {
-           DirectoryTree.Node node = directoryTree.getNode(path);
+       void deleteFile(QString path) {
+           node* node = directoryTree->getNode(path);
            // 文件不存在
-           if (node == null) {
-               throw new NotFoundException("文件不存在");
+           if (node == nullptr) {
+               return;
            }
-           File file = node.getFile();
+           file* file = node->getFile();
            // 如果文件是目录，且不是空文件，不能删除
-           if (file.getFileAttribute().isDirectory() && node.getChildren().size() > 0) {
-               throw new IllegalOperationException("无法删除非空目录");
+           if (file->getFileAttribute()->isDirectory() && node->getChildren()->size() > 0) {
+               return;
            }
            // 在目录树里删除文件
-           directoryTree.deleteNode(path);
+           directoryTree->deleteNode(path);
            // 如果是文件，先释放掉文件内容所占的磁盘块
-           if (!file.getFileAttribute().isDirectory()) {
+           if (!file->getFileAttribute()->isDirectory()) {
                // 释放文件占用的磁盘块
-               diskManager.releaseDiskBlocksStartWith(file.getFirstDiskBlockIndex());
+               diskManager->releaseDiskBlocksStartWith(file->getFirstDiskBlockIndex());
            }
            // 获取父节点的磁盘块
-           DiskBlock diskBlock = diskManager.getDiskBlock(node.getParent().getFile().getFirstDiskBlockIndex());
+           disk_block* diskBlock = diskManager->getDiskBlock(node->getParent()->getFile()->getFirstDiskBlockIndex());
            // 获得此文件在目录磁盘块里的下标
-           int diskBlockIndexOfFile = FileSupporter.getDiskBlockIndexOfFile(diskBlock.getBytes(), file);
+           int diskBlockIndexOfFile = file_supporter::getDiskBlockIndexOfFile(diskBlock->getBytes(), file);
            // 把目录磁盘块里的此文件设置为空
-           diskManager.writeDiskBlock(new byte[] {FileConstant.EMPTY_FILE_SYMBOL}, 0, 1, diskBlock.getIndex(), diskBlockIndexOfFile);
+           QByteArray bytes;
+           bytes.push_back(file_constant::EMPTY_FILE_SYMBOL);
+           diskManager->writeDiskBlock(&bytes, 0, 1, diskBlock->getIndex(), diskBlockIndexOfFile);
        }
 
        /**
@@ -168,13 +173,13 @@ public:
         * @return 文件
         * @throws NotFoundException 找不到该文件
         */
-       public File getFile(String path) {
-           DirectoryTree.Node node = directoryTree.getNode(path);
+       file* getFile(QString path) {
+           node* node = directoryTree->getNode(path);
            // 找不到该文件
-           if (node == null) {
-               throw new NotFoundException("找不到该文件");
+           if (node == nullptr) {
+               return nullptr;
            }
-           return node.getFile();
+           return node->getFile();
        }
 
        /**
@@ -185,19 +190,20 @@ public:
         * @throws NotFoundException 找不到该文件夹
         * @throws IllegalArgumentException 该路径不是指向一个文件夹
         */
-       public List<File> getFileList(String directoryPath) {
-           DirectoryTree.Node node = directoryTree.getNode(directoryPath);
+       vector<file>* getFileList(QString directoryPath) {
+           node* node0 = directoryTree->getNode(directoryPath);
            // 文件夹不存在
-           if (node == null) {
-               throw new NotFoundException("找不到该文件夹");
+           if (node0 == nullptr) {
+               return nullptr;
            }
            // 该路径不是指向一个文件夹
-           if (!node.getFile().getFileAttribute().isDirectory()) {
-               throw new IllegalArgumentException("该路径不是指向一个文件夹");
+           if (!node0->getFile()->getFileAttribute()->isDirectory()) {
+               return nullptr;
            }
-           List<File> fileList = new ArrayList<>(node.getChildren().size());
-           for (DirectoryTree.Node child : node.getChildren()) {
-               fileList.add(child.getFile());
+           vector<file>* fileList = new vector<file>;
+           for (vector<node>::iterator child = node0->getChildren()->begin();
+                child != node0->getChildren()->end(); child++) {
+               fileList->push_back(*child->getFile());
            }
            return fileList;
        }
@@ -211,33 +217,33 @@ public:
         * @throws IOException IO操作出错
         * @throws NotFoundException 文件不存在
         */
-       public File updateFile(String path, String newFileName) throws IOException {
-           DirectoryTree.Node node = directoryTree.getNode(path);
+       file* updateFile(QString path, QString newFileName) {
+           node* node0 = directoryTree->getNode(path);
            // 文件不存在
-           if (node == null) {
-               throw new NotFoundException("文件不存在");
+           if (node0 == nullptr) {
+               return nullptr;
            }
-           File file = node.getFile();
+           file* file1 = node0->getFile();
            // 判断文件名是否合法
-           if (file.getFileAttribute().isDirectory()) {
-               FileSupporter.legalDirectoryName(newFileName);
+           if (file1->getFileAttribute()->isDirectory()) {
+               file_supporter::legalDirectoryName(newFileName);
            } else {
-               FileSupporter.legalFileName(newFileName);
+               file_supporter::legalFileName(newFileName);
            }
            // 解析文件名
-           Pair<String, String> fileName = FileSupporter.parseFileName(newFileName);
+           pair0<QString, QString>* fileName = file_supporter::parseFileName(newFileName);
            // 获取更新后的文件
-           File file0 = new File(fileName.first, fileName.second, file.getFileAttribute(),
-                   file.getFirstDiskBlockIndex(), file.getLength());
-           node.setFile(file0);
+           file* file0 = new file(*fileName->first, *fileName->second, file1->getFileAttribute(),
+                   file1->getFirstDiskBlockIndex(), file1->getLength());
+           node0->setFile(file0);
            // 获取该文件目录的磁盘块
-           DiskBlock diskBlock = diskManager.getDiskBlock(node.getParent().getFile().getFirstDiskBlockIndex());
+           disk_block* diskBlock = diskManager->getDiskBlock(node0->getParent()->getFile()->getFirstDiskBlockIndex());
            // 获取该磁盘块里该文件的起始下标
-           int diskBlockIndexOfFile = FileSupporter.getDiskBlockIndexOfFile(diskBlock.getBytes(), file);
+           int diskBlockIndexOfFile = file_supporter::getDiskBlockIndexOfFile(diskBlock->getBytes(), file1);
            // 把文件转换成字节数组
-           byte[] bytes = FileSupporter.parseFileToBytes(file0);
+           QByteArray* bytes = file_supporter::parseFileToBytes(file0);
            // 更新文件信息到磁盘中
-           diskManager.writeDiskBlock(bytes,0, FileConstant.SIZE_OF_FILE, diskBlock.getIndex(), diskBlockIndexOfFile);
+           diskManager->writeDiskBlock(bytes,0, file_constant::SIZE_OF_FILE, diskBlock->getIndex(), diskBlockIndexOfFile);
            return file0;
        }
 
@@ -248,8 +254,8 @@ public:
         * @param content 文件内容
         * @throws IOException IO操作出错
         */
-       public void writeFile(String path, String content) throws IOException {
-           writeFile(path, content.getBytes(FileConstant.ENCODING_OF_FILE));
+       void writeFile(QString path, QString content) {
+           writeFile(path, content.getBytes(file_constant::ENCODING_OF_FILE));
        }
 
        /**
@@ -259,8 +265,8 @@ public:
         * @return 读取的字符串
         * @throws IOException IO操作出错
         */
-       public String readFile(String path) throws IOException {
-           byte[] bytes = readFile(path, 0);
+       QString readFile(QString path) {
+           QByteArray* bytes = readFile(path, 0);
            return new String(bytes, FileConstant.ENCODING_OF_FILE);
        }
 
@@ -274,31 +280,33 @@ public:
         * @throws IllegalArgumentException 该路径指向的是一个文件夹
         * @throws IOException IO操作出错
         */
-       private byte[] readFile(String path, int length) throws IOException {
-           DirectoryTree.Node node = directoryTree.getNode(path);
+       QByteArray* readFile(QString path, int length)  {
+           node* node0 = directoryTree->getNode(path);
            // 找不到该文件
-           if (node == null) {
-               throw new NotFoundException("找不到该文件");
+           if (node0 == nullptr) {
+               return nullptr;
            }
            // 该路径指向的是一个文件夹
-           if (node.getFile().getFileAttribute().isDirectory()) {
-               throw new IllegalArgumentException("该路径指向的是一个文件夹");
+           if (node0->getFile()->getFileAttribute()->isDirectory()) {
+               return nullptr;
            }
 
            // 获取该文件的磁盘块列表
-           List<DiskBlock> diskBlockList = diskManager.getDiskBlocksStartWith(node.getFile().getFirstDiskBlockIndex());
+           vector<disk_block> diskBlockList = diskManager->getDiskBlocksStartWith(node0->getFile()->getFirstDiskBlockIndex());
            // 最后一个磁盘块的文件结束标志下标
-           int endOfFileSymbolIndex = FileSupporter.getEndOfFileSymbolIndex(
-                   diskBlockList.get(diskBlockList.size() - 1).getBytes());
+           int endOfFileSymbolIndex = file_supporter::getEndOfFileSymbolIndex(
+                   diskBlockList[diskBlockList.size() - 1].getBytes());
            // 申请文件内容的空间
-           byte[] bytes = new byte[(diskBlockList.size() - 1) * DiskConstant.BLOCK_SIZE + endOfFileSymbolIndex];
-           for (int i = 0; i < diskBlockList.size(); i++) {
-               byte[] bytes0 = diskBlockList.get(i).getBytes();
+           QByteArray* bytes = new QByteArray;
+           for (int i = 0; i < static_cast<int>(diskBlockList.size()); i++) {
+               QByteArray* bytes0 = diskBlockList[static_cast<unsigned long long>(i)].getBytes();
                // 对于最后一个磁盘块只读取到结束标志的下标处
-               if (i == diskBlockList.size() - 1) {
-                   System.arraycopy(bytes0, 0, bytes, i * DiskConstant.BLOCK_SIZE,  endOfFileSymbolIndex);
+               if (i == static_cast<int>(diskBlockList.size() - 1)) {
+                   bytes->append(QByteArray::fromStdString(
+                                    bytes0->toStdString()
+                                    .substr(0, static_cast<unsigned long long>(endOfFileSymbolIndex))));
                } else {
-                   System.arraycopy(bytes0, 0, bytes, i * DiskConstant.BLOCK_SIZE, bytes0.length);
+                   bytes->append(*bytes0);
                }
            }
 
@@ -314,23 +322,23 @@ public:
         * @throws NotFoundException 找不到该文件夹
         * @throws IllegalArgumentException 该路径不是指向一个文件夹
         */
-       private void writeFile(String path, byte[] bytes) throws IOException {
-           DirectoryTree.Node node = directoryTree.getNode(path);
+       void writeFile(QString path, QByteArray* bytes) {
+           node* node0 = directoryTree->getNode(path);
            // 找不到该文件
-           if (node == null) {
-               throw new NotFoundException("找不到该文件");
+           if (node0 == nullptr) {
+               return;
            }
            // 该路径指向的是一个文件夹
-           if (node.getFile().getFileAttribute().isDirectory()) {
-               throw new IllegalArgumentException("该路径指向的是一个文件夹");
+           if (node0->getFile()->getFileAttribute()->isDirectory()) {
+               return;
            }
 
            // 获取该文件的磁盘块列表
-           List<DiskBlock> diskBlockList = diskManager.getDiskBlocksStartWith(node.getFile().getFirstDiskBlockIndex());
-           byte[] bytes0 = new byte[bytes.length + 1];
-           System.arraycopy(bytes, 0, bytes0, 0, bytes.length);
+           vector<disk_block> diskBlockList = diskManager->getDiskBlocksStartWith(node0->getFile()->getFirstDiskBlockIndex());
+           QByteArray bytes0;
+           bytes0.append(*bytes);
            // 设置文件结束标识符
-           bytes0[bytes0.length - 1] = FileConstant.END_OF_FILE;
+           bytes0.append(file_constant::END_OF_FILE);
            // 需要使用的磁盘块数量
            int numberOfDiskBlocks = (int) Math.ceil((double)bytes0.length / DiskConstant.BLOCK_SIZE);
            // 把字节数组的内容写入磁盘
@@ -372,7 +380,7 @@ public:
         * @return File 新创建的文件
         * @throws IOException IO操作出错
         */
-       private File createFile(String directoryPath, String name, String type, FileAttribute fileAttribute,
+       file createFile(String directoryPath, String name, String type, FileAttribute fileAttribute,
                                int firstDiskBlockIndex) throws IOException {
            // 新建一个文件
            File file = new File(name, type, fileAttribute, firstDiskBlockIndex, fileAttribute.isDirectory() ? 0 : 1);

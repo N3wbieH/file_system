@@ -9,6 +9,7 @@
 #include "string"
 #include "string_utils.h"
 #include "disk_constant.h"
+#include "pair0.h"
 
 using namespace std;
 
@@ -86,57 +87,57 @@ public:
 //        return new FileAttribute(readOnly, system, readWrite, directory);
 //    }
 
-//    /**
-//     * 把一个文件解析成字节数组
-//     *
-//     * @param file 文件
-//     * @return byte[] 字节数组
-//     */
-//    public static byte[] parseFileToBytes(File file) {
-//        byte[] bytes = new byte[FileConstant.SIZE_OF_FILE];
-//        int i = 0;
-//        // 解析文件名
-//        byte[] name = file.getName().getBytes();
-//        for (; i < name.length; i++) {
-//            bytes[i] = name[i];
-//        }
-//        for (; i < FileConstant.SIZE_OF_NAME; i++) {
-//            bytes[i] = 0;
-//        }
-//        // 解析文件类型
-//        // 这里有两种情况，一种是目录文件，文件类型为空
-//        // 一种是普通文件，目录类型可能空
-//        byte[] type = file.getType() == null || "".equals(file.getType().trim()) ? new byte[0] : file.getType().getBytes();
-//        int j;
-//        for (j = 0; j < type.length; j++) {
-//            bytes[i++] = type[j];
-//        }
-//        for (; i < FileConstant.SIZE_OF_NAME + FileConstant.SIZE_OF_TYPE; i++) {
-//            bytes[i] = 0;
-//        }
-//        // 解析文件属性
-//        bytes[i++] = parseFileAttributeToByte(file.getFileAttribute());
-//        // 文件起始磁盘块下标
-//        bytes[i++] = (byte) file.getFirstDiskBlockIndex();
-//        // 文件长度
-//        bytes[i] = (byte) file.getLength();
-//        return bytes;
-//    }
+    /**
+     * 把一个文件解析成字节数组
+     *
+     * @param file 文件
+     * @return byte[] 字节数组
+     */
+    static QByteArray* parseFileToBytes(file* file) {
+        QByteArray* bytes;
+        int i = 0;
+        // 解析文件名
+        string name = file->getName().toStdString();
+        for (; i < static_cast<int>(name.size()); i++) {
+            bytes->push_back(name[static_cast<unsigned long long>(i)]);
+        }
+        for (; i < file_constant::SIZE_OF_NAME; i++) {
+            bytes->push_back(static_cast<int>(0));
+        }
+        // 解析文件类型
+        // 这里有两种情况，一种是目录文件，文件类型为空
+        // 一种是普通文件，目录类型可能空
+        string type = (file->getType() == nullptr || file->getType().trimmed() == "") ? "" : file->getType().toStdString();
+        int j;
+        for (j = 0; j < static_cast<int>(type.length()); j++) {
+            bytes->push_back(type[static_cast<unsigned long long>(j)]);
+        }
+        for (; i < file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE; i++) {
+            bytes->push_back(static_cast<int>(0));
+        }
+        // 解析文件属性
+        bytes->push_back(parseFileAttributeToByte(file->getFileAttribute()));
+        // 文件起始磁盘块下标
+        bytes->push_back(static_cast<char>(file->getFirstDiskBlockIndex()));
+        // 文件长度
+        bytes->push_back(static_cast<char>(file->getLength()));
+        return bytes;
+    }
 
-//    /**
-//     * 解析文件属性成一个字节
-//     *
-//     * @param fileAttribute 文件属性
-//     * @return 字节
-//     */
-//    public static byte parseFileAttributeToByte(FileAttribute fileAttribute) {
-//        String attribute = "0000";
-//        attribute = attribute + (fileAttribute.isDirectory() ? "1" : "0");
-//        attribute = attribute + (fileAttribute.isReadWrite() ? "1" : "0");
-//        attribute = attribute + (fileAttribute.isSystem() ? "1" : "0");
-//        attribute = attribute + (fileAttribute.isReadOnly() ? "1" : "0");
-//        return Byte.valueOf(attribute,2);
-//    }
+    /**
+     * 解析文件属性成一个字节
+     *
+     * @param fileAttribute 文件属性
+     * @return 字节
+     */
+    static char parseFileAttributeToByte(file_attribute* fileAttribute) {
+        int attribute = 0;
+        attribute = attribute + 8 * (fileAttribute->isDirectory() ? 1 : 0);
+        attribute = attribute + 8 * (fileAttribute->isReadWrite() ? 1 : 0);
+        attribute = attribute + 8 * (fileAttribute->isSystem() ? 1 : 0);
+        attribute = attribute + 8 * (fileAttribute->isReadOnly() ? 1 : 0);
+        return static_cast<char>(attribute);
+    }
 
     /**
      * 判断一个文件名是否合法
@@ -210,7 +211,7 @@ public:
             if (i % 8 == 0) {
                 bytes->push_back(file_constant::EMPTY_FILE_SYMBOL);
             } else {
-                bytes->push_back(static_cast<char>(0));
+                bytes->push_back(static_cast<int>(0));
             }
         }
         return bytes;
@@ -224,65 +225,67 @@ public:
      */
     static QString getFileName(file* file);
 
-//    /**
-//     * 获取结束标志的下标
-//     *
-//     * @param bytes 字节数组
-//     * @return 结束标志的下标
-//     */
-//    public static int getEndOfFileSymbolIndex(byte[] bytes) {
-//        for (int i = 0; i < bytes.length; i++) {
-//            if (bytes[i] == FileConstant.END_OF_FILE) {
-//                return i;
-//            }
-//        }
-//        return -1;
-//    }
+    /**
+     * 获取结束标志的下标
+     *
+     * @param bytes 字节数组
+     * @return 结束标志的下标
+     */
+    static int getEndOfFileSymbolIndex(QByteArray* bytes) {
+        for (int i = 0; i < bytes->size(); i++) {
+            if (bytes->data()[i] == file_constant::END_OF_FILE) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
-//    /**
-//     * 获得一个文件在目录磁盘块内的下标
-//     *
-//     * @param bytes 磁盘块
-//     * @param file 文件
-//     * @return 目录磁盘块内的下标
-//     */
-//    public static int getDiskBlockIndexOfFile(byte[] bytes, File file) {
-//        byte[] fileBytes = parseFileToBytes(file);
-//        for (int i = 0; i < DiskConstant.BLOCK_SIZE / FileConstant.SIZE_OF_FILE; i++) {
-//            int j;
-//            for (j = 0; j < FileConstant.SIZE_OF_FILE; j++) {
-//                if (!(bytes[i * FileConstant.SIZE_OF_FILE + j] == fileBytes[j])) {
-//                     break;
-//                }
-//            }
-//            if (j == FileConstant.SIZE_OF_FILE) {
-//                return i * FileConstant.SIZE_OF_FILE;
-//            }
-//        }
-//        return -1;
-//    }
+    /**
+     * 获得一个文件在目录磁盘块内的下标
+     *
+     * @param bytes 磁盘块
+     * @param file 文件
+     * @return 目录磁盘块内的下标
+     */
+    static int getDiskBlockIndexOfFile(QByteArray* bytes, file* file) {
+        QByteArray* fileBytes = parseFileToBytes(file);
+        for (int i = 0; i < disk_constant::BLOCK_SIZE / file_constant::SIZE_OF_FILE; i++) {
+            int j;
+            for (j = 0; j < file_constant::SIZE_OF_FILE; j++) {
+                if (!(bytes[i * file_constant::SIZE_OF_FILE + j] == fileBytes[j])) {
+                     break;
+                }
+            }
+            if (j == file_constant::SIZE_OF_FILE) {
+                return i * file_constant::SIZE_OF_FILE;
+            }
+        }
+        return -1;
+    }
 
-//    /**
-//     * 把文件名解析成文件名和类型
-//     *
-//     * @param fileName 文件名
-//     * @return Pair<String, String>
-//     */
-//    public static Pair<String, String> parseFileName(String fileName) {
-//        // 寻找 “.”的下标
-//        int index = fileName.lastIndexOf(FileConstant.FILE_NAME_SEPARATOR);
-//        String name;
-//        String type;
-//        // 没有找到 “.”，说明没有文件类型
-//        if (index == -1) {
-//            name = fileName;
-//            type = null;
-//        } else {
-//            name = fileName.substring(0, index);
-//            type = fileName.substring(index + 1);
-//        }
-//        return new Pair<>(name, type);
-//    }
+    /**
+     * 把文件名解析成文件名和类型
+     *
+     * @param fileName 文件名
+     * @return Pair<String, String>
+     */
+    static pair0<QString, QString>* parseFileName(QString fileName) {
+        // 寻找 “.”的下标
+        int index = fileName.lastIndexOf(file_constant::FILE_NAME_SEPARATOR);
+        QString name;
+        QString type;
+        // 没有找到 “.”，说明没有文件类型
+        if (index == -1) {
+            name = fileName;
+            type = nullptr;
+        } else {
+            name = QString::fromStdString(fileName.toStdString()
+                                          .substr(0, static_cast<unsigned long long>(index)));
+            type = QString::fromStdString(fileName.toStdString()
+                                          .substr(static_cast<unsigned long long>(index + 1)));
+        }
+        return new pair0<QString, QString>(&name, &type);
+    }
 
 //    /**
 //     * 把文件名解析成文件名和类型

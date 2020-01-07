@@ -16,11 +16,10 @@ void disk_manager::writeDiskBlock(disk_block *diskBlock) {
     file.close();
 }
 
-void disk_manager::writeDiskBlock(disk_block *diskBlock, int offset, int length, int diskBlockIndex, int boffset) {
+void disk_manager::writeDiskBlock(QByteArray *bytes0, int offset, int length, int diskBlockIndex, int boffset) {
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::WriteOnly);
     file.seek(diskBlockIndex * disk_constant::BLOCK_SIZE + boffset);
-    QByteArray *bytes0 = diskBlock -> getBytes();
     file.write(byte_utils::subQByteArray(bytes0, offset, length), bytes0->size());
     file.close();
 }

@@ -60,7 +60,7 @@ public:
      * @param boffset 磁盘块内偏移
 
      */
-    void writeDiskBlock(disk_block *diskBlock, int offset, int length, int diskBlockIndex, int boffset);
+    void writeDiskBlock(QByteArray *bytes0, int offset, int length, int diskBlockIndex, int boffset);
 
     /**
      * 把磁盘块列表写入磁盘

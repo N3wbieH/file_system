@@ -32,7 +32,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
-    pair.cpp \
+    pair0.cpp \
     string_utils.cpp \
     test.cpp \
     txtwindow.cpp
@@ -53,7 +53,7 @@ HEADERS += \
     item.h \
     mainwindow.h \
     node.h \
-    pair.h \
+    pair0.h \
     string_utils.h \
     test.h \
     txtwindow.h
