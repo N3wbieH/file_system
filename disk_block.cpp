@@ -1,14 +1,14 @@
 #include "disk_block.h"
 
-disk_block::disk_block(int index, vector<char> bytes) {
+disk_block::disk_block(int index, QByteArray *bytes) {
     this->index = index;
     this->bytes = bytes;
 }
-vector<char> disk_block::getBytes() {
+QByteArray *disk_block::getBytes() {
     return bytes;
 }
 
-void disk_block::setBytes(vector<char> bytes) {
+void disk_block::setBytes(QByteArray *bytes) {
     this->bytes = bytes;
 }
 

@@ -7,11 +7,11 @@
 using namespace std;
 
 void testDiskBlock() {
-    vector<char> diskblock;
-    diskblock.push_back(49);
-    disk_block disk = *new disk_block(1, diskblock);
-    cout << static_cast<int>(disk.getBytes()[0]) << endl;
-    cout << static_cast<char>(disk.getBytes()[0]) << endl;
+    QByteArray diskblock;
+    diskblock.push_back('a');
+    disk_block disk = *new disk_block(1, &diskblock);
+    cout << disk.getBytes()->data() << endl;
+    cout << disk.getBytes() << endl;
 }
 
 
@@ -28,7 +28,7 @@ void testFileAllocationTable() {
     }
 int main()
 {
-testFileAllocationTable();
+testDiskBlock();
 
     return 0;
 }

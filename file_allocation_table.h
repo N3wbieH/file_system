@@ -5,7 +5,9 @@
 #include "vector"
 using namespace std;
 
-
+/**
+ * 描述: 文件分配表
+ */
 class file_allocation_table
 {
 private:
