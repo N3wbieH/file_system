@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/image">
+        <file alias="back">image/back.png</file>
+        <file alias="dir">image/dir.png</file>
+        <file alias="exit">image/exit.png</file>
+        <file alias="save">image/save.png</file>
+        <file alias="txt">image/txt.png</file>
+    </qresource>
+</RCC>
