@@ -16,25 +16,45 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    byte_utils.cpp \
+    directory_tree.cpp \
     disk_block.cpp \
     disk_constant.cpp \
     disk_manager.cpp \
+    file.cpp \
     file_allocation_table.cpp \
     file_allocation_table_constant.cpp \
+    file_attribute.cpp \
+    file_constant.cpp \
+    file_manager.cpp \
+    file_supporter.cpp \
     item.cpp \
     main.cpp \
     mainwindow.cpp \
+    node.cpp \
+    pair.cpp \
+    string_utils.cpp \
     test.cpp \
     txtwindow.cpp
 
 HEADERS += \
+    byte_utils.h \
+    directory_tree.h \
     disk_block.h \
     disk_constant.h \
     disk_manager.h \
+    file.h \
     file_allocation_table.h \
     file_allocation_table_constant.h \
+    file_attribute.h \
+    file_constant.h \
+    file_manager.h \
+    file_supporter.h \
     item.h \
     mainwindow.h \
+    node.h \
+    pair.h \
+    string_utils.h \
     test.h \
     txtwindow.h
 
