@@ -33,7 +33,7 @@ public:
      * @param symbol 空闲空间的标志符
      * @return 空闲空间的开始下标，如果返回-1表示没有空闲空间
      */
-    static int findEmptySpaceOfDiskBlock(QByteArray *bytes, int pace, char symbol);
+    static int findEmptySpaceOfDiskBlock(QByteArray bytes, int pace, char symbol);
 
     /**
      * 把磁盘块解析成文件列表
@@ -41,7 +41,7 @@ public:
      * @param diskBlock 磁盘块
      * @return List<File> 文件列表
      */
-    static vector<file>* parseDiskBlockToFileList(disk_block* diskBlock);
+    static vector<file> parseDiskBlockToFileList(disk_block diskBlock);
 
     /**
      * 通过一个字节数组创建一个文件
@@ -50,7 +50,7 @@ public:
      * @param offset 字节数字的读取偏移量
      * @return File 文件
      */
-    static file* createFileByBytes(QByteArray* bytes, int offset);
+    static file* createFileByBytes(QByteArray bytes, int offset);
     /**
      * 通过一个字节构造文件属性对象
      *
@@ -65,7 +65,7 @@ public:
      * @param file 文件
      * @return byte[] 字节数组
      */
-    static QByteArray* parseFileToBytes(file* file);
+    static QByteArray parseFileToBytes(file* file);
 
     /**
      * 解析文件属性成一个字节
@@ -94,7 +94,7 @@ public:
      * 生成一个空的目录磁盘块
      * @return byte[] 空目录磁盘块
      */
-    static QByteArray* getEmptyDirectoryDiskBlock();
+    static QByteArray getEmptyDirectoryDiskBlock();
 
     /**
      * 获取文件名，会自动拼接文件名和类型
@@ -110,7 +110,7 @@ public:
      * @param bytes 字节数组
      * @return 结束标志的下标
      */
-    static int getEndOfFileSymbolIndex(QByteArray* bytes);
+    static int getEndOfFileSymbolIndex(QByteArray bytes);
 
     /**
      * 获得一个文件在目录磁盘块内的下标
@@ -119,7 +119,7 @@ public:
      * @param file 文件
      * @return 目录磁盘块内的下标
      */
-    static int getDiskBlockIndexOfFile(QByteArray* bytes, file* file);
+    static int getDiskBlockIndexOfFile(QByteArray bytes, file* file);
 
     /**
      * 把文件名解析成文件名和类型

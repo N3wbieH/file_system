@@ -1,13 +1,14 @@
 #include "file_supporter.h"
 #include "pair0.h"
-file_supporter::file_supporter()
-{
+#include "stdio.h"
+using namespace std;
 
-}
 
-int file_supporter::findEmptySpaceOfDiskBlock(QByteArray* bytes, int pace, char symbol) {
-    for (int i = 0; i < static_cast<int>(bytes->size()); i += pace) {
-        if (bytes->data()[i] == symbol) {
+file_supporter::file_supporter(){}
+
+int file_supporter::findEmptySpaceOfDiskBlock(QByteArray bytes, int pace, char symbol) {
+    for (int i = 0; i < static_cast<int>(bytes.size()); i += pace) {
+        if (bytes[i] == symbol) {
             return i;
         }
     }
@@ -31,27 +32,30 @@ QString file_supporter::getFileName(QString path) {
     return QString::fromStdString(str);
 }
 
-vector<file>* file_supporter::parseDiskBlockToFileList(disk_block* diskBlock) {
-    QByteArray* bytes = diskBlock->getBytes();
-    vector<file>* fileList = new vector<file>;
-    for (int i = 0; i < bytes->size() / file_constant::SIZE_OF_FILE; i++) {
+vector<file> file_supporter::parseDiskBlockToFileList(disk_block diskBlock) {
+    QByteArray bytes = diskBlock.getBytes();
+    vector<file> fileList;
+    for (int i = 0; i < (bytes.size() / file_constant::SIZE_OF_FILE); i++) {
         // 空文件
-        if ((*bytes)[i * file_constant::SIZE_OF_FILE] == file_constant::EMPTY_FILE_SYMBOL) {
+        if (bytes[i * file_constant::SIZE_OF_FILE] == file_constant::EMPTY_FILE_SYMBOL) {
+            printf("dasda11111111111\n");
             continue;
         }
-        fileList->push_back(*createFileByBytes(bytes, i * file_constant::SIZE_OF_FILE));
+        printf("1241567\n");
+        fileList.push_back(*createFileByBytes(bytes, i * file_constant::SIZE_OF_FILE));
     }
+    printf("%d\n", fileList.size());
     return fileList;
 }
 
-file* file_supporter::createFileByBytes(QByteArray* bytes, int offset) {
+file* file_supporter::createFileByBytes(QByteArray bytes, int offset) {
     QString name = byte_utils::bytesToString(bytes, offset, file_constant::SIZE_OF_NAME).trimmed();
     QString type = byte_utils::bytesToString(bytes, offset + file_constant::SIZE_OF_NAME, file_constant::SIZE_OF_TYPE).trimmed();
-    file_attribute* fileAttribute = createFileAttributeByByte((*bytes)[offset + file_constant::SIZE_OF_NAME
+    file_attribute* fileAttribute = createFileAttributeByByte(bytes[offset + file_constant::SIZE_OF_NAME
             + file_constant::SIZE_OF_TYPE]);
-    int firstDiskBlockIndex = (*bytes)[offset + file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE
+    int firstDiskBlockIndex = bytes[offset + file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE
             + file_constant::SIZE_OF_ATTRIBUTE];
-    int length = (*bytes)[offset + file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE
+    int length = bytes[offset + file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE
             + file_constant::SIZE_OF_ATTRIBUTE + file_constant::SIZE_OF_FIRST_DISK_BLOCK_INDEX];
     return new file(name, type, fileAttribute, firstDiskBlockIndex, length);
 }
@@ -65,32 +69,32 @@ file_attribute* file_supporter::createFileAttributeByByte(char attribute) {
     return new file_attribute(readOnly, system, readWrite, directory);
 }
 
-QByteArray* file_supporter::parseFileToBytes(file* file) {
-    QByteArray* bytes = new QByteArray;
-    bytes->resize(file_constant::SIZE_OF_FILE);
+QByteArray file_supporter::parseFileToBytes(file* file) {
+    QByteArray bytes;
+    bytes.resize(file_constant::SIZE_OF_FILE);
     int i = 0;
     // 解析文件名
     QByteArray name = file->getName().toLocal8Bit();
     for (; i < static_cast<int>(name.size()); i++) {
-        (*bytes)[i] = name[i];
+        bytes[i] = name[i];
     }
     for (; i < file_constant::SIZE_OF_NAME; i++) {
-        (*bytes)[i] = 0;
+        bytes[i] = 0;
     }
     QByteArray type = (file->getType() == nullptr || file->getType().trimmed() == "") ? "" : file->getType().toLocal8Bit();
     int j;
     for (j = 0; j < static_cast<int>(type.length()); j++) {
-        (*bytes)[i++] = type[j];
+        bytes[i++] = type[j];
     }
     for (; i < file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE; i++) {
-        (*bytes)[i] = 0;
+        bytes[i] = 0;
     }
     // 解析文件属性
-    (*bytes)[i++] = parseFileAttributeToByte(file->getFileAttribute());
+    bytes[i++] = parseFileAttributeToByte(file->getFileAttribute());
     // 文件起始磁盘块下标
-    (*bytes)[i++] = static_cast<char>(file->getFirstDiskBlockIndex());
+    bytes[i++] = static_cast<char>(file->getFirstDiskBlockIndex());
     // 文件长度
-    (*bytes)[i] = static_cast<char>(file->getLength());
+    bytes[i] = static_cast<char>(file->getLength());
     return bytes;
 }
 
@@ -156,22 +160,22 @@ bool file_supporter::legalDirectoryName(QString directoryName) {
 }
 
 
-QByteArray* file_supporter::getEmptyDirectoryDiskBlock() {
-    QByteArray* bytes = new QByteArray;
+QByteArray file_supporter::getEmptyDirectoryDiskBlock() {
+    QByteArray bytes;
     for (int i = 0; i < disk_constant::BLOCK_SIZE; i++) {
         if (i % 8 == 0) {
-            (*bytes)[i] = file_constant::EMPTY_FILE_SYMBOL;
+            bytes[i] = file_constant::EMPTY_FILE_SYMBOL;
         } else {
-            (*bytes)[i] = 0;
+            bytes[i] = 0;
         }
     }
     return bytes;
 }
 
 
-int file_supporter::getEndOfFileSymbolIndex(QByteArray* bytes) {
-    for (int i = 0; i < bytes->size(); i++) {
-        if ((*bytes)[i] == file_constant::END_OF_FILE) {
+int file_supporter::getEndOfFileSymbolIndex(QByteArray bytes) {
+    for (int i = 0; i < bytes.size(); i++) {
+        if (bytes[i] == file_constant::END_OF_FILE) {
             return i;
         }
     }
@@ -179,12 +183,12 @@ int file_supporter::getEndOfFileSymbolIndex(QByteArray* bytes) {
 }
 
 
-int file_supporter::getDiskBlockIndexOfFile(QByteArray* bytes, file* file) {
-    QByteArray* fileBytes = parseFileToBytes(file);
+int file_supporter::getDiskBlockIndexOfFile(QByteArray bytes, file* file) {
+    QByteArray fileBytes = parseFileToBytes(file);
     for (int i = 0; i < disk_constant::BLOCK_SIZE / file_constant::SIZE_OF_FILE; i++) {
         int j;
         for (j = 0; j < file_constant::SIZE_OF_FILE; j++) {
-            if (!((*bytes)[i * file_constant::SIZE_OF_FILE + j] == (*fileBytes)[j])) {
+            if (!(bytes[i * file_constant::SIZE_OF_FILE + j] == fileBytes[j])) {
                  break;
             }
         }

@@ -12,12 +12,12 @@
 class disk_manager
 {
 
-private:
+    public:
 
     /**
      * 文件分配表
      */
-    file_allocation_table *fileAllocationTable;
+    file_allocation_table fileAllocationTable;
 
     /**
      * 更新文件分配表到磁盘
@@ -40,7 +40,7 @@ public:
      * @param disk 磁盘文件
      * @throws IOException IO错误，交给上一层处理
      */
-    disk_manager(file_allocation_table *fileAllocationTable);
+    disk_manager();
 
 
     /**
@@ -60,7 +60,7 @@ public:
      * @param boffset 磁盘块内偏移
 
      */
-    void writeDiskBlock(QByteArray *bytes0, int offset, int length, int diskBlockIndex, int boffset);
+    void writeDiskBlock(QByteArray bytes0, int offset, int length, int diskBlockIndex, int boffset);
 
     /**
      * 把磁盘块列表写入磁盘
@@ -109,7 +109,7 @@ public:
      * @param bytes 磁盘块的初始化数据
      * @return DiskBlock 新分配的磁盘块
      */
-    disk_block *allocateDiskBlock(QByteArray* bytes);
+    disk_block *allocateDiskBlock(QByteArray bytes);
 
     /**
      * 读取一个磁盘块

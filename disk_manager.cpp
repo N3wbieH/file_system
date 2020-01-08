@@ -5,24 +5,22 @@
 #include "iostream"
 using namespace std;
 
-disk_manager::disk_manager(file_allocation_table *fileAllocationTable) : fileAllocationTable(fileAllocationTable){
-
-}
+disk_manager::disk_manager() {}
 
 void disk_manager::writeDiskBlock(disk_block *diskBlock) {
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::WriteOnly);
     file.seek(diskBlock->getIndex() * disk_constant::BLOCK_SIZE);
-    QByteArray *bytes = diskBlock -> getBytes();
-    file.write(*bytes, bytes->size());
+    QByteArray bytes = diskBlock ->getBytes();
+    file.write(bytes, bytes.size());
     file.close();
 }
 
-void disk_manager::writeDiskBlock(QByteArray *bytes0, int offset, int length, int diskBlockIndex, int boffset) {
+void disk_manager::writeDiskBlock(QByteArray bytes0, int offset, int length, int diskBlockIndex, int boffset) {
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::WriteOnly);
     file.seek(diskBlockIndex * disk_constant::BLOCK_SIZE + boffset);
-    file.write(byte_utils::subQByteArray(bytes0, offset, length), bytes0->size());
+    file.write(byte_utils::subQByteArray(bytes0, offset, length), bytes0.size());
     file.close();
 }
 
@@ -34,10 +32,10 @@ void disk_manager::writeDiskBlockList(vector<disk_block>* diskBlockList) {
 
 void disk_manager::updateFileAllocationTable() {
     for (int i = 0, j = 0; i < 2; i++) {
-        QByteArray* bytes = new QByteArray;
-        bytes->resize(disk_constant::BLOCK_SIZE);
+        QByteArray bytes;
+        bytes.resize(disk_constant::BLOCK_SIZE);
         for (int k = 0; k < disk_constant::BLOCK_SIZE; k++, j++) {
-            bytes->push_back(static_cast<char>(fileAllocationTable->getItem(j)->next));
+            bytes.push_back(static_cast<char>(fileAllocationTable.getItem(j)->next));
         }
         writeDiskBlock(new disk_block(i, bytes));
     }
@@ -51,11 +49,11 @@ disk_block* disk_manager::getDiskBlock(int index) {
     file.read(buf, disk_constant::BLOCK_SIZE);
     file.close();
     QByteArray block = QByteArray::fromRawData(buf, sizeof(buf));
-    return new disk_block(index, &block);
+    return new disk_block(index, block);
 }
 
 vector<disk_block>* disk_manager::getDiskBlocksStartWith(int startIndex) {
-    vector<item>* itemList = fileAllocationTable->getItemsStartWith(startIndex);
+    vector<item>* itemList = fileAllocationTable.getItemsStartWith(startIndex);
     vector<disk_block>* diskBlockList = new vector<disk_block>;
     for (item it : *itemList) {
         diskBlockList->push_back(*getDiskBlock(it.next));
@@ -77,11 +75,11 @@ disk_block* disk_manager::checkAndUpdateFileAllocationTable(item *item) {
 }
 
 disk_block* disk_manager::allocateDiskBlock() {
-    item *item0 = fileAllocationTable->allocateItem();
+    item *item0 = fileAllocationTable.allocateItem();
     return checkAndUpdateFileAllocationTable(item0);
 }
 
-disk_block* disk_manager::allocateDiskBlock(QByteArray *bytes) {
+disk_block* disk_manager::allocateDiskBlock(QByteArray bytes) {
     disk_block *diskBlock = allocateDiskBlock();
     // 无法分配到磁盘块
     if (diskBlock == nullptr) {
@@ -95,15 +93,15 @@ disk_block* disk_manager::allocateDiskBlock(QByteArray *bytes) {
 }
 
 disk_block* disk_manager::allocateDiskBlockPreviousWith(int previous) {
-    return checkAndUpdateFileAllocationTable(fileAllocationTable->allocateItem(previous));
+    return checkAndUpdateFileAllocationTable(fileAllocationTable.allocateItem(previous));
 }
 
 void disk_manager::releaseDiskBlocksStartWith(int start) {
-    fileAllocationTable->releaseItemsStartWith(start);
+    fileAllocationTable.releaseItemsStartWith(start);
     updateFileAllocationTable();
 }
 
 void disk_manager::releaseDiskBlocksPreviousWith(int previous) {
-    fileAllocationTable->releaseItemsPreviousWith(previous);
+    fileAllocationTable.releaseItemsPreviousWith(previous);
     updateFileAllocationTable();
 }

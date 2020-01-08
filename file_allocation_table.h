@@ -20,7 +20,7 @@ private:
      * 初始化文件分配表
      * @param items 文件分配表的字节数组
      */
-    void init(vector<char>* items);
+    void init();
 
     /**
      * 随机获取一个空文件分配表项
@@ -49,7 +49,7 @@ public:
      * 初始化文件分配表，包括初始化保留项
      * @param items 文件分配表的字节数组
      */
-    file_allocation_table(vector<char>* items);
+    file_allocation_table();
 
     /**
      * 获取以startIndex为起点的文件分配表项列表

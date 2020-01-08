@@ -8,7 +8,7 @@ class byte_utils
 public:
     byte_utils();
 
-    static QByteArray subQByteArray(QByteArray *bytes0, int offset, int length);
+    static QByteArray subQByteArray(QByteArray bytes0, int offset, int length);
 
     /**
      * 字节类型转换成布尔型数组
@@ -26,7 +26,7 @@ public:
      * @param length 长度
      * @return String 字符串
      */
-    static QString bytesToString(QByteArray* bytes, int offset, int length);
+    static QString bytesToString(QByteArray bytes, int offset, int length);
 
 };
 

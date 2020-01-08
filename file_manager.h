@@ -8,11 +8,11 @@
 
 class file_manager
 {
-private:
+    public:
     /**
      * 磁盘管理器
      */
-    disk_manager* diskManager;
+    disk_manager diskManager;
     /**
      * 目录树
      */
@@ -24,7 +24,7 @@ public:
        /**
         * 文件管理器构造器
         */
-       file_manager(disk_manager* diskManager);
+       file_manager();
 
        /**
         * 创建一个目录
@@ -103,7 +103,7 @@ public:
         * @param length 读取长度
         * @return 读取的字节
         */
-       QByteArray* readFile(QString path, int length);
+       QByteArray readFile(QString path, int length);
 
        /**
         * 把内容写入文件
@@ -111,7 +111,7 @@ public:
         * @param path 文件路径
         * @param bytes 文件内容字节数组
         */
-       void writeFile(QString path, QByteArray* bytes);
+       void writeFile(QString path, QByteArray bytes);
 
        /**
         * 创建一个文件，会为文件分配一块磁盘块，会添加到磁盘里，并更新文件树

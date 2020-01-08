@@ -1,4 +1,6 @@
 #include "directory_tree.h"
+#include "iostream"
+using namespace  std;
 
 const QString directory_tree::SEPARATOR =  "/";
 
@@ -24,13 +26,16 @@ node* directory_tree::addNode(node* directory, node* file) {
 }
 
 node* directory_tree::getNode(QString path) {
+
     // 路径不是以"/"为开头的，非法路径
     if (!path.startsWith(SEPARATOR)) {
         return nullptr;
     }
 
     // 解析路径
-    QStringList directories = path.trimmed().split(SEPARATOR);
+    QStringList directories = QString::fromStdString(
+                path.trimmed().toStdString().substr(1)).split(SEPARATOR);
+
     node* node0 = root;
     for (int i = 1; i < directories.size(); i++) {
         for (int j = 0; j < static_cast<int>(node0->children->size()); j++) {
@@ -48,6 +53,7 @@ node* directory_tree::getNode(QString path) {
             }
             // 如果遍历完目录还是没找到，说明该目录不存在
             if (j == static_cast<int>(node0->children->size() - 1)) {
+
                 return nullptr;
             }
         }
@@ -56,6 +62,7 @@ node* directory_tree::getNode(QString path) {
             return nullptr;
         }
     }
+
     // 如果以上情况都不符合，代表该路径是根目录
     return node0;
 }

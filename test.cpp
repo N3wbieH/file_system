@@ -18,9 +18,9 @@ using namespace std;
 void testDiskBlock() {
     QByteArray diskblock;
     diskblock.push_back('a');
-    disk_block disk = *new disk_block(1, &diskblock);
-    cout << disk.getBytes()->data() << endl;
-    cout << disk.getBytes() << endl;
+    disk_block disk = *new disk_block(1, diskblock);
+    cout << disk.getBytes().data() << endl;
+//    cout << disk.getBytes() << endl;
 }
 
 
@@ -48,25 +48,21 @@ void testQByteArray(QByteArray *bytes0, int offset, int length) {
  * 初始化磁盘管理器
  */
 void testDiskManager() {
-    QFile file0(disk_constant::DISK_NAME);
-    file0.open(QIODevice::ReadOnly);
-    char buf[file_allocation_table_constant::LENGTH];
-    file0.read(buf, file_allocation_table_constant::LENGTH);
-    file0.close();
-    vector<char>* bytes = new vector<char>;
-    bytes->resize(file_allocation_table_constant::LENGTH);
-    for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
-        bytes->push_back(buf[i]);
-    }
-
-    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
-    disk_manager diskManager(fileAllocationTable);
-    file_manager fileManager(&diskManager);
-    vector<file>* fileList = fileManager.getFileList("/usr/dir");
-    for (file file1 : *fileList) {
-        cout << file1.getName().toStdString() << endl;
-    }
-   cout << "1111"<< endl;
+    disk_manager diskManager;
+    file_manager* fileManager = new file_manager(diskManager);
+//     cout << fileManager->directoryTree->getRoot()->getFile()->getType().toStdString() << endl;
+       printf("" + fileManager->directoryTree->getRoot()->getChildren()->size());
+       printf("\n");
+//    cout << "2222"<< endl;
+//    vector<file>* fileList = fileManager->getFileList("/usr/dir/");
+//    cout << "31231"<< endl;
+//    cout << (fileList)->size() << endl;
+//    cout << "31231"<< endl;
+//    for (file file1 : *fileList) {
+//        QString qs = file1.getName();
+//        cout << qs.data() << endl;
+//    }
+//   cout << "1111"<< endl;
 }
 
 int main()

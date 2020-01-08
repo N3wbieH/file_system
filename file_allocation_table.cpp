@@ -1,17 +1,24 @@
 #include "file_allocation_table.h"
 #include "item.h"
-#include "iostream"
+#include "QFile"
+#include "disk_constant.h"
+
 using namespace std;
 
-file_allocation_table::file_allocation_table(vector<char>* items) {
-    init(items);
+file_allocation_table::file_allocation_table() {
+    init();
 }
 
-void file_allocation_table::init(vector<char>* items) {
-    this->items = new vector<item>;
-    items->resize(items->size());
+void file_allocation_table::init() {
+    QFile file0(disk_constant::DISK_NAME);
+    file0.open(QIODevice::ReadOnly);
+    char buf[file_allocation_table_constant::LENGTH];
+    file0.read(buf, file_allocation_table_constant::LENGTH);
+    file0.close();
+
+    this->items = new vector<item>(file_allocation_table_constant::LENGTH);
     for (int i = 0; i < static_cast<int>(items->size()); i++) {
-        item item0(i, (*items)[static_cast<unsigned long long >(i)]);
+        item item0(i, buf[i]);
         this->items->push_back(item0);
     }
 }
