@@ -1,15 +1,13 @@
 #ifndef ITEM_H
 #define ITEM_H
-#include "QString"
 /**
 * 文件分配表的项
 */
 class item
 {
 public:
-    item();
+    item(){}
     item(int index, int next);
-    QString toString();
     /**
      * 当前文件分配表项的下标
      */

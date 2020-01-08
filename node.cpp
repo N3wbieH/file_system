@@ -1,10 +1,12 @@
 #include "node.h"
+#include "iostream"
+using namespace std;
 
-
-node::node(node* parent, vector<node> *children, file *file) {
+node::node(node *parent, vector<node>* children, file* file) {
+    this->file0 = file;
     this->parent = parent;
     this->children = children;
-    this->file0 = file;
+
 }
 
 node* node::getParent() {
@@ -27,6 +29,6 @@ file* node::getFile() {
     return file0;
 }
 
-void node::setFile(file *file) {
-    this->file0 = file;
+void node::setFile(file* file) {
+    file0 = file;
 }

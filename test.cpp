@@ -13,46 +13,50 @@
 #include "qdatastream.h"
 #include "file_manager.h"
 #include "file.h"
+#include "byte_utils.h"
 using namespace std;
 
-void testDiskBlock() {
-    QByteArray diskblock;
-    diskblock.push_back('a');
-    disk_block disk = *new disk_block(1, diskblock);
-    cout << disk.getBytes().data() << endl;
-//    cout << disk.getBytes() << endl;
-}
+//void testDiskBlock() {
+//    QByteArray diskblock;
+//    diskblock.push_back('a');
+//    disk_block disk = *new disk_block(1, diskblock);
+//    cout << disk.getBytes().data() << endl;
+////    cout << disk.getBytes() << endl;
+//}
 
 
-void testFileAllocationTable() {
-    char chars[] = {-1, -1, -1, 4, 9, 0, 7, 8, -1, 12, 11, -1, 13, -1, 0, 0};
-    vector<char>* bytes = new vector<char>;
-    bytes->assign(chars, chars + 16);
-    file_allocation_table fileAllocationTable(bytes);
-    vector<item>* items = fileAllocationTable.getItemsStartWith(3);
-    for (vector<item>::iterator it = items->begin(); it != items->end(); it++) {
-        cout << it->next << endl;
-    }
+////void testFileAllocationTable() {
+////    char chars[] = {-1, -1, -1, 4, 9, 0, 7, 8, -1, 12, 11, -1, 13, -1, 0, 0};
+////    vector<char>* bytes = new vector<char>;
+////    bytes->assign(chars, chars + 16);
+////    file_allocation_table fileAllocationTable(bytes);
+////    vector<item>* items = fileAllocationTable.getItemsStartWith(3);
+////    for (vector<item>::iterator it = items->begin(); it != items->end(); it++) {
+////        cout << it->next << endl;
+////    }
 
-}
+////}
 
-void testQByteArray(QByteArray *bytes0, int offset, int length) {
-    QString qstr = *bytes0;
-    string str = qstr.toStdString().substr(static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length));
-    QString qstr0 = QString::fromStdString(str);
-    QByteArray bytes1 = qstr0.toLatin1();
-    cout << bytes1[0] << endl;
-}
+//void testQByteArray(QByteArray *bytes0, int offset, int length) {
+//    QString qstr = *bytes0;
+//    string str = qstr.toStdString().substr(static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length));
+//    QString qstr0 = QString::fromStdString(str);
+//    QByteArray bytes1 = qstr0.toLatin1();
+//    cout << bytes1[0] << endl;
+//}
 
 /**
  * 初始化磁盘管理器
  */
 void testDiskManager() {
-    disk_manager diskManager;
-    file_manager* fileManager = new file_manager(diskManager);
+    file_manager fileManager;
+    file* file0 = fileManager.getFile("/avc.z");
+    cout << file0->getType().toStdString() << endl;
+//    vector<file>* fileList = fileManager.getFile("/");
+//    cout << fileList->size() << endl;
 //     cout << fileManager->directoryTree->getRoot()->getFile()->getType().toStdString() << endl;
-       printf("" + fileManager->directoryTree->getRoot()->getChildren()->size());
-       printf("\n");
+//       printf("%d\n", fileManager.directoryTree->getRoot()->getChildren()->size());
+//       printf("\n");
 //    cout << "2222"<< endl;
 //    vector<file>* fileList = fileManager->getFileList("/usr/dir/");
 //    cout << "31231"<< endl;
@@ -68,6 +72,6 @@ void testDiskManager() {
 int main()
 {
     testDiskManager();
-    cout << "dasda" << endl;
+
     return 0;
 }

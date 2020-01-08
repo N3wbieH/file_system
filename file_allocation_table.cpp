@@ -1,6 +1,7 @@
 #include "file_allocation_table.h"
 #include "item.h"
 #include "QFile"
+#include "iostream"
 #include "disk_constant.h"
 
 using namespace std;
@@ -15,12 +16,11 @@ void file_allocation_table::init() {
     char buf[file_allocation_table_constant::LENGTH];
     file0.read(buf, file_allocation_table_constant::LENGTH);
     file0.close();
-
-    this->items = new vector<item>(file_allocation_table_constant::LENGTH);
-    for (int i = 0; i < static_cast<int>(items->size()); i++) {
-        item item0(i, buf[i]);
-        this->items->push_back(item0);
+    vector<item> items0;
+    for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
+        items0.push_back(*new item(i, static_cast<int>(buf[i])));
     }
+    items = &items0;
 }
 
 item* file_allocation_table::getEmptyItem() {
@@ -92,15 +92,6 @@ void file_allocation_table::releaseItemsPreviousWith(int previous) {
     }
 }
 
-QString file_allocation_table::toString() {
-    QString str = "FileAllocationTable{";
-    str += "items=";
-    for (vector<item>::iterator it = items->begin(); it != items->end(); ++it) {
-        str += it->toString();
-    }
-    str += '}';
-    return str;
-}
 
 vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
     // 该下标指向文件分配表项

@@ -10,11 +10,11 @@ class node
 public:
     node *parent;
 
-    vector<node> *children;
+    vector<node>* children;
 
-    file *file0;
+    file* file0;
 
-    node(node* parent, vector<node> *children, file *file);
+    node(node *parent, vector<node>* children, file* file);
 
     node* getParent();
 
@@ -26,7 +26,7 @@ public:
 
     file* getFile();
 
-    void setFile(file *file);
+    void setFile(file* file);
 };
 
 #endif // NODE_H

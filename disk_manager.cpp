@@ -3,6 +3,7 @@
 #include "QFile"
 #include<fstream>
 #include "iostream"
+#include "file_constant.h"
 using namespace std;
 
 disk_manager::disk_manager() {}
@@ -48,8 +49,12 @@ disk_block* disk_manager::getDiskBlock(int index) {
     char buf[disk_constant::BLOCK_SIZE];
     file.read(buf, disk_constant::BLOCK_SIZE);
     file.close();
-    QByteArray block = QByteArray::fromRawData(buf, sizeof(buf));
-    return new disk_block(index, block);
+    QByteArray* block = new QByteArray;
+    block->resize(disk_constant::BLOCK_SIZE);
+    for (int i = 0; i < disk_constant::BLOCK_SIZE; i++) {
+        (*block)[i] = buf[i];
+    }
+    return new disk_block(index, *block);
 }
 
 vector<disk_block>* disk_manager::getDiskBlocksStartWith(int startIndex) {

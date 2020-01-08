@@ -6,11 +6,11 @@ const QString directory_tree::SEPARATOR =  "/";
 
 const QString directory_tree::ROOT_PATH = "/";
 
-directory_tree::directory_tree(file *rootFile) {
+directory_tree::directory_tree(file* rootFile) {
     this->root = new node(nullptr, new vector<node>, rootFile);
 }
 
-node* directory_tree::addNode(node* directory, node* file) {
+node* directory_tree::addNode(node *directory, node *file) {
     // 目录不存在
     if (directory == nullptr) {
         throw nullptr;
@@ -32,16 +32,22 @@ node* directory_tree::getNode(QString path) {
         return nullptr;
     }
 
-    // 解析路径
-    QStringList directories = QString::fromStdString(
-                path.trimmed().toStdString().substr(1)).split(SEPARATOR);
+    if (path == SEPARATOR) {
+        return root;
+    }
+// 解析路径
+    QStringList directories = path.split(SEPARATOR);
 
     node* node0 = root;
     for (int i = 1; i < directories.size(); i++) {
+        cout << "directories[1].toStdString()" << endl;
         for (int j = 0; j < static_cast<int>(node0->children->size()); j++) {
-            node* child = &(*node0->children)[static_cast<unsigned long long>(j)];
+            vector<node>* children = node0->getChildren();
+            node* child = &(*children)[j];
+
             // 如果此文件是目录文件且文件名和路径相符合
             if (file_supporter::getFileName(child->file0) == directories[i]) {
+                cout << "directories[1].toStdString()" << endl;
                 if (i == directories.size() - 1) {
                     return child;
                 }
@@ -116,7 +122,7 @@ node* directory_tree::addNode(QString directoryPath, file* file) {
  * @return Node 被删除的节点
  */
 node* directory_tree::deleteNode(QString path) {
-    int index = path.trimmed().lastIndexOf(SEPARATOR);
+    int index = path.lastIndexOf(SEPARATOR);
     QString directoryPath;
     QString fileName =
             QString::fromStdString(path.toStdString().substr(static_cast<unsigned long long>(index + 1)));
@@ -146,7 +152,8 @@ node* directory_tree::deleteNode(QString directoryPath, QString fileName) {
 
     vector<node>* vector0 = directory->children;
     for (vector<node>::iterator child = vector0->begin(); child != vector0->end(); child++) {
-        if (fileName == file_supporter::getFileName(child->getFile())) {
+        file* file0 = child->getFile();
+        if (fileName == file_supporter::getFileName(file0)) {
             directory->children->erase(child);
             return &*child;
         }

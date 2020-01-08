@@ -41,7 +41,7 @@ public:
      * @param diskBlock 磁盘块
      * @return List<File> 文件列表
      */
-    static vector<file> parseDiskBlockToFileList(disk_block diskBlock);
+    static vector<file>* parseDiskBlockToFileList(disk_block* diskBlock);
 
     /**
      * 通过一个字节数组创建一个文件

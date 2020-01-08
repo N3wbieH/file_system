@@ -104,8 +104,6 @@ public:
      */
     void releaseItemsPreviousWith(int previous);
 
-    QString toString();
-
 };
 
 #endif // FILE_ALLOCATION_TABLE_H

@@ -6,6 +6,7 @@
 #include "qstringlist.h"
 #include "file_constant.h"
 #include "file_supporter.h"
+#include "disk_manager.h"
 using namespace std;
 
 /**
@@ -30,9 +31,8 @@ private:
     node* root;
 
 public:
-    directory_tree();
 
-    directory_tree(file *rootFile);
+    directory_tree(file* rootFile);
 
     /**
      * 增加一个子节点

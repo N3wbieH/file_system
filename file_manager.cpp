@@ -1,5 +1,5 @@
 #include "file_manager.h"
-#include <stdio.h>
+#include "iostream"
 using namespace std;
 
 file_manager::file_manager() {
@@ -32,7 +32,7 @@ file* file_manager::createDirectory(QString directoryPath, QString directoryName
     }
 
     // 为目录分配一块磁盘块
-    disk_block* newDiskBlock = diskManager->allocateDiskBlock(file_supporter::getEmptyDirectoryDiskBlock());
+    disk_block* newDiskBlock = diskManager.allocateDiskBlock(file_supporter::getEmptyDirectoryDiskBlock());
     // 初始化目录磁盘块
     return createFile(directoryPath, directoryName, nullptr,
             new file_attribute(false, system, true, true), newDiskBlock->getIndex());
@@ -72,7 +72,7 @@ file* file_manager::createFile(QString directoryPath, QString fileName, bool sys
     // 为文件分配一块磁盘块
     QByteArray newByte;
     newByte.push_back(-1);
-    disk_block* newDiskBlock = diskManager->allocateDiskBlock(newByte);
+    disk_block* newDiskBlock = diskManager.allocateDiskBlock(newByte);
     // 创建文件
     return createFile(directoryPath, fileName0->first, fileName0->second, new file_attribute(false, system, true, false),
             newDiskBlock->getIndex());
@@ -94,20 +94,21 @@ void file_manager::deleteFile(QString path) {
     // 如果是文件，先释放掉文件内容所占的磁盘块
     if (!file->getFileAttribute()->isDirectory()) {
         // 释放文件占用的磁盘块
-        diskManager->releaseDiskBlocksStartWith(file->getFirstDiskBlockIndex());
+        diskManager.releaseDiskBlocksStartWith(file->getFirstDiskBlockIndex());
     }
     // 获取父节点的磁盘块
-    disk_block* diskBlock = diskManager->getDiskBlock(node->getParent()->getFile()->getFirstDiskBlockIndex());
+    disk_block* diskBlock = diskManager.getDiskBlock(node->getParent()->getFile()->getFirstDiskBlockIndex());
     // 获得此文件在目录磁盘块里的下标
     int diskBlockIndexOfFile = file_supporter::getDiskBlockIndexOfFile(diskBlock->getBytes(), file);
     // 把目录磁盘块里的此文件设置为空
     QByteArray bytes;
     bytes.push_back(file_constant::EMPTY_FILE_SYMBOL);
-    diskManager->writeDiskBlock(bytes, 0, 1, diskBlock->getIndex(), diskBlockIndexOfFile);
+    diskManager.writeDiskBlock(bytes, 0, 1, diskBlock->getIndex(), diskBlockIndexOfFile);
 }
 
 file* file_manager::getFile(QString path) {
     node* node = directoryTree->getNode(path);
+    cout << node->getFile()->getName().toStdString() << endl;
     // 找不到该文件
     if (node == nullptr) {
         return nullptr;
@@ -152,13 +153,13 @@ file* file_manager::updateFile(QString path, QString newFileName) {
             file1->getFirstDiskBlockIndex(), file1->getLength());
     node0->setFile(file0);
     // 获取该文件目录的磁盘块
-    disk_block* diskBlock = diskManager->getDiskBlock(node0->getParent()->getFile()->getFirstDiskBlockIndex());
+    disk_block* diskBlock = diskManager.getDiskBlock(node0->getParent()->getFile()->getFirstDiskBlockIndex());
     // 获取该磁盘块里该文件的起始下标
     int diskBlockIndexOfFile = file_supporter::getDiskBlockIndexOfFile(diskBlock->getBytes(), file1);
     // 把文件转换成字节数组
     QByteArray bytes = file_supporter::parseFileToBytes(file0);
     // 更新文件信息到磁盘中
-    diskManager->writeDiskBlock(bytes,0, file_constant::SIZE_OF_FILE, diskBlock->getIndex(), diskBlockIndexOfFile);
+    diskManager.writeDiskBlock(bytes,0, file_constant::SIZE_OF_FILE, diskBlock->getIndex(), diskBlockIndexOfFile);
     return file0;
 }
 
@@ -186,7 +187,7 @@ QByteArray file_manager::readFile(QString path, int length)  {
     }
 
     // 获取该文件的磁盘块列表
-    vector<disk_block>* diskBlockList = diskManager->getDiskBlocksStartWith(node0->getFile()->getFirstDiskBlockIndex());
+    vector<disk_block>* diskBlockList = diskManager.getDiskBlocksStartWith(node0->getFile()->getFirstDiskBlockIndex());
     // 最后一个磁盘块的文件结束标志下标
     int endOfFileSymbolIndex = file_supporter::getEndOfFileSymbolIndex(
             (*diskBlockList)[diskBlockList->size() - 1].getBytes());
@@ -247,16 +248,16 @@ void file_manager::writeFile(QString path, QByteArray bytes) {
         }
         // 最后一个磁盘块，只写一部分字节
         if (i + 1 == numberOfDiskBlocks) {
-            diskManager->writeDiskBlock(bytes0, i * disk_constant::BLOCK_SIZE,
+            diskManager.writeDiskBlock(bytes0, i * disk_constant::BLOCK_SIZE,
                     bytes0.size() % disk_constant::BLOCK_SIZE, diskBlock->getIndex(), 0);
         } else {
-            diskManager->writeDiskBlock(bytes0, i *  disk_constant::BLOCK_SIZE,  disk_constant::BLOCK_SIZE,
+            diskManager.writeDiskBlock(bytes0, i *  disk_constant::BLOCK_SIZE,  disk_constant::BLOCK_SIZE,
                     diskBlock->getIndex(), 0);
         }
     }
     // 如果原来的磁盘块数量大于所需要的磁盘块数量且原来的磁盘块数量大于0，释放掉多余的磁盘块
     if (static_cast<int>(diskBlockList->size()) > numberOfDiskBlocks && diskBlockList->size() > 0) {
-        diskManager->releaseDiskBlocksPreviousWith((*diskBlockList)[static_cast<unsigned long long>(numberOfDiskBlocks - 1)].getIndex());
+        diskManager.releaseDiskBlocksPreviousWith((*diskBlockList)[static_cast<unsigned long long>(numberOfDiskBlocks - 1)].getIndex());
     }
 }
 
@@ -270,55 +271,78 @@ file* file_manager::createFile(QString directoryPath, QString name, QString type
     node* parent = directoryTree->addNode(directoryPath, file0);
     int parentFirstDiskBlockIndex = parent->getFile()->getFirstDiskBlockIndex();
     // 获取父节点的磁盘块
-    disk_block* diskBlock = diskManager->getDiskBlock(parentFirstDiskBlockIndex);
+    disk_block* diskBlock = diskManager.getDiskBlock(parentFirstDiskBlockIndex);
     int emptySpaceIndex = file_supporter::findEmptySpaceOfDiskBlock(diskBlock->getBytes(), file_constant::SIZE_OF_FILE,
             file_constant::EMPTY_FILE_SYMBOL);
     // 把文件转换成字节数组
     QByteArray bytes = file_supporter::parseFileToBytes(file0);
     // 更新文件信息到磁盘中
-    diskManager->writeDiskBlock(bytes,0, file_constant::SIZE_OF_FILE, parentFirstDiskBlockIndex, emptySpaceIndex);
+    diskManager.writeDiskBlock(bytes,0, file_constant::SIZE_OF_FILE, parentFirstDiskBlockIndex, emptySpaceIndex);
     return file0;
 }
 
 void file_manager::init() {
     // 读取根目录磁盘块
-    disk_block* rootDiskBlock = diskManager->getDiskBlock(file_constant::DISK_BLOCK_NUMBER_OF_ROOT_DIRECTORY);
+    disk_block* rootDiskBlock = diskManager.getDiskBlock(file_constant::DISK_BLOCK_NUMBER_OF_ROOT_DIRECTORY);
     // 解析成文件列表
-    vector<file> children = file_supporter::parseDiskBlockToFileList(*rootDiskBlock);
+    vector<file>* children = file_supporter::parseDiskBlockToFileList(rootDiskBlock);
     // 新建根目录文件
     file* root = new file("/", "", new file_attribute(false, true, true, true),
-            file_constant::DISK_BLOCK_NUMBER_OF_ROOT_DIRECTORY, static_cast<int>(children.size()));
+            file_constant::DISK_BLOCK_NUMBER_OF_ROOT_DIRECTORY, static_cast<int>(children->size()));
     // 设置根节点
     directoryTree = new directory_tree(root);
     // 从根节点递归初始化
     initDirectory(directoryTree->getRoot());
+
+    int a = 3;
+    a = a + 1;
+
 }
 
 
 void file_manager::initDirectory(node* directory) {
     // 把目录的所有节点添加到目录里
     // 拿到此文件的磁盘块
-    disk_block* diskBlock = diskManager->getDiskBlock(directory->getFile()->getFirstDiskBlockIndex());
-    printf("-------------------\n");
-
+    disk_block* diskBlock = diskManager.getDiskBlock(directory->getFile()->getFirstDiskBlockIndex());
     // 把此磁盘块解析成文件列表
-    vector<file> children = file_supporter::parseDiskBlockToFileList(*diskBlock);
-    printf("-------------------\n");
+    vector<file>* children = file_supporter::parseDiskBlockToFileList(diskBlock);
     // 添加此目录下的所有子节点
-    for (file child : children) {
+//    for (file child : *children) {
+//        // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
+//        if (child.getFileAttribute()->isDirectory()) {
+//            node* node0 = new node(directory, new vector<node>, &child);
+//            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz" << endl;
+//            // 先把该子节点文件添加到目录里
+//            directoryTree->addNode(directory, node0);
+//            // 再递归调用此方法初始化子节点
+//            initDirectory(node0);
+//            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz end" << endl;
+//        }
+//        // 如果子节点是普通文件，把子节点添加到目录里
+//        else {
+//            node* node0 = new node(directory, nullptr, &child);
+//            // 先把该子节点文件添加到目录里
+//            directoryTree->addNode(directory, node0);
+//        }
+//    }
+
+    for (vector<file>::iterator child = children->begin(); child != children->end(); child++) {
         // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
-        if (child.getFileAttribute()->isDirectory()) {
-            node* node0 = new node(directory, new vector<node>, &child);
+        if (child->getFileAttribute()->isDirectory()) {
+            node* node0 = new node(directory, new vector<node>, &*child);
+            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz" << endl;
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);
             // 再递归调用此方法初始化子节点
             initDirectory(node0);
+            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz end" << endl;
         }
         // 如果子节点是普通文件，把子节点添加到目录里
         else {
-            node* node0 = new node(directory, nullptr, &child);
+            node* node0 = new node(directory, nullptr, &*child);
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);
         }
     }
+
 }

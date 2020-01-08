@@ -1,6 +1,7 @@
 #include "file_supporter.h"
 #include "pair0.h"
 #include "stdio.h"
+#include "iostream"
 using namespace std;
 
 
@@ -15,13 +16,18 @@ int file_supporter::findEmptySpaceOfDiskBlock(QByteArray bytes, int pace, char s
     return -1;
 }
 QString file_supporter::getFileName(file* file) {
+    cout << "getFileName" << endl;
     if (file->getFileAttribute()->isDirectory()) {
-        return file->getName().trimmed();
+        cout << "getFileName1" << endl;
+        QString n = file->getName();
+        return n;
     }
-    if (string_utils::isBlank(file->getType())) {
-        return file->getName().trimmed();
+    if (file->getType() == "") {
+        cout << "getFileName2" << endl;
+        return file->getName();
     }
-    return file->getName().trimmed() + file_constant::FILE_NAME_SEPARATOR + file->getType().trimmed();
+    cout << "getFileName3" << endl;
+    return file->getName() + file_constant::FILE_NAME_SEPARATOR + file->getType();
 }
 QString file_supporter::getFileName(QString path) {
     int index = path.lastIndexOf("/");
@@ -32,19 +38,16 @@ QString file_supporter::getFileName(QString path) {
     return QString::fromStdString(str);
 }
 
-vector<file> file_supporter::parseDiskBlockToFileList(disk_block diskBlock) {
-    QByteArray bytes = diskBlock.getBytes();
-    vector<file> fileList;
+vector<file>* file_supporter::parseDiskBlockToFileList(disk_block* diskBlock) {
+    QByteArray bytes = diskBlock->getBytes();
+    vector<file>* fileList = new vector<file>;
     for (int i = 0; i < (bytes.size() / file_constant::SIZE_OF_FILE); i++) {
         // 空文件
         if (bytes[i * file_constant::SIZE_OF_FILE] == file_constant::EMPTY_FILE_SYMBOL) {
-            printf("dasda11111111111\n");
             continue;
         }
-        printf("1241567\n");
-        fileList.push_back(*createFileByBytes(bytes, i * file_constant::SIZE_OF_FILE));
+        fileList->push_back(*createFileByBytes(bytes, i * file_constant::SIZE_OF_FILE));
     }
-    printf("%d\n", fileList.size());
     return fileList;
 }
 
