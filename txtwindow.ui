@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <widget class="QPlainTextEdit" name="content">
     <property name="geometry">
      <rect>
       <x>3</x>
@@ -28,6 +28,14 @@
       <width>741</width>
       <height>511</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="plainText">
+     <string/>
     </property>
    </widget>
   </widget>

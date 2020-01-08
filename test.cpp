@@ -26,9 +26,9 @@ void testFileAllocationTable() {
         }
 
     }
-int main()
-{
-testDiskBlock();
+//int main()
+//{
+//testDiskBlock();
 
-    return 0;
-}
+//    return 0;
+//}

@@ -21,7 +21,9 @@ SOURCES += \
     disk_manager.cpp \
     file_allocation_table.cpp \
     file_allocation_table_constant.cpp \
+    input_dialog.cpp \
     item.cpp \
+    item_widget.cpp \
     main.cpp \
     mainwindow.cpp \
     test.cpp \
@@ -33,12 +35,15 @@ HEADERS += \
     disk_manager.h \
     file_allocation_table.h \
     file_allocation_table_constant.h \
+    input_dialog.h \
     item.h \
+    item_widget.h \
     mainwindow.h \
     test.h \
     txtwindow.h
 
 FORMS += \
+    input_dialog.ui \
     mainwindow.ui \
     txtwindow.ui
 
