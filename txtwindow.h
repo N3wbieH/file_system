@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class MainWindow;
+
 namespace Ui {
 class txtWindow;
 }
@@ -12,7 +14,7 @@ class txtWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit txtWindow(QWidget *parent = nullptr);
+    explicit txtWindow(MainWindow *mainWindow, QString filePath, QString content, QWidget *parent = nullptr);
     ~txtWindow();
 
 private slots:
@@ -22,6 +24,8 @@ private slots:
 
 private:
     Ui::txtWindow *ui;
+    MainWindow* mainWindow;
+    QString filePath;
 };
 
 #endif // TXTWINDOW_H

@@ -24,11 +24,13 @@ SOURCES += \
     file.cpp \
     file_allocation_table.cpp \
     file_allocation_table_constant.cpp \
+    input_dialog.cpp \
     file_attribute.cpp \
     file_constant.cpp \
     file_manager.cpp \
     file_supporter.cpp \
     item.cpp \
+    item_widget.cpp \
     main.cpp \
     mainwindow.cpp \
     node.cpp \
@@ -46,11 +48,13 @@ HEADERS += \
     file.h \
     file_allocation_table.h \
     file_allocation_table_constant.h \
+    input_dialog.h \
     file_attribute.h \
     file_constant.h \
     file_manager.h \
     file_supporter.h \
     item.h \
+    item_widget.h \
     mainwindow.h \
     node.h \
     pair0.h \
@@ -59,6 +63,7 @@ HEADERS += \
     txtwindow.h
 
 FORMS += \
+    input_dialog.ui \
     mainwindow.ui \
     txtwindow.ui
 

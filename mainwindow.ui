@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>779</width>
+    <width>788</width>
     <height>364</height>
    </rect>
   </property>
@@ -56,7 +56,7 @@
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
        </property>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="pathBar">
         <property name="geometry">
          <rect>
           <x>30</x>
@@ -64,6 +64,14 @@
           <width>491</width>
           <height>20</height>
          </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>/</string>
         </property>
        </widget>
        <widget class="QPushButton" name="backButton">
@@ -85,7 +93,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="test.qrc">
+         <iconset resource="src.qrc">
           <normaloff>:/image/back</normaloff>:/image/back</iconset>
         </property>
         <property name="iconSize">
@@ -117,79 +125,185 @@
        <property name="spacing">
         <number>0</number>
        </property>
-       <item row="1" column="2">
-        <widget class="QWidget" name="widget_7" native="true"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QWidget" name="widget_2" native="true"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QWidget" name="widget_5" native="true"/>
-       </item>
-       <item row="1" column="3">
-        <widget class="QWidget" name="widget_8" native="true"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QWidget" name="widget_3" native="true"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QWidget" name="widget_6" native="true"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QWidget" name="widget" native="true">
-         <property name="styleSheet">
-          <string notr="true">background:transparent;border:2px solid red;</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QWidget" name="widget_4" native="true"/>
-       </item>
       </layout>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="loadButton">
+   <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>320</y>
-      <width>75</width>
-      <height>23</height>
+      <x>610</x>
+      <y>280</y>
+      <width>55</width>
+      <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>load</string>
+     <string>未使用</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>320</y>
-      <width>75</width>
-      <height>23</height>
+      <x>610</x>
+      <y>250</y>
+      <width>55</width>
+      <height>20</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
     <property name="text">
-     <string>new</string>
+     <string>已使用</string>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>70</y>
-      <width>181</width>
-      <height>181</height>
+      <y>250</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2"/>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(62, 173, 245)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>280</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(162, 166, 151)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>250</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>字节</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>280</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>字节</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="useLabel">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>250</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="freeLabel">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>280</y>
+      <width>55</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>20</y>
+      <width>20</width>
+      <height>331</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
    </widget>
   </widget>
  </widget>
  <resources>
-  <include location="test.qrc"/>
+  <include location="src.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -25,17 +25,6 @@ using namespace std;
 //}
 
 
-////void testFileAllocationTable() {
-////    char chars[] = {-1, -1, -1, 4, 9, 0, 7, 8, -1, 12, 11, -1, 13, -1, 0, 0};
-////    vector<char>* bytes = new vector<char>;
-////    bytes->assign(chars, chars + 16);
-////    file_allocation_table fileAllocationTable(bytes);
-////    vector<item>* items = fileAllocationTable.getItemsStartWith(3);
-////    for (vector<item>::iterator it = items->begin(); it != items->end(); it++) {
-////        cout << it->next << endl;
-////    }
-
-////}
 
 //void testQByteArray(QByteArray *bytes0, int offset, int length) {
 //    QString qstr = *bytes0;
@@ -75,3 +64,4 @@ int main()
 
     return 0;
 }
+

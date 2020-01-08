@@ -2,8 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPainter>
+#include <QLabel>
+#include <iostream>
 #include "ui_mainwindow.h"
 #include "txtwindow.h"
+#include "item_widget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,19 +21,25 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    QPixmap *filePic;
-    QPixmap *dirPic;
+    void setCurPath(QString path);
+    void saveFile(QString filePath, QString content);
+    void newFile(int type, QString name);
+    void renameFile(QString name);
+    void deleteFile(QString filePath);
+
 private slots:
     void load();
-    void on_pushButton_clicked();
-
     void on_backButton_clicked();
+    void on_pathBar_returnPressed();
 
 private:
     Ui::MainWindow *ui;
     QMap<QString,bool> map;
+    QString curPath = "/";
 
-    void setContent(QString name, QLayout* layout);
+
+    void paintEvent(QPaintEvent *);
+    void drawPieChart(int fillAngle);
     void clearContent(QLayout* layout);
 
 };
