@@ -11,13 +11,13 @@ class disk_block
 {
 private:
     int index;
-    QByteArray *bytes;
+    QByteArray bytes;
 
 public:
-    disk_block(int index, QByteArray *bytes);
-    QByteArray* getBytes();
+    disk_block(int index, QByteArray bytes);
+    QByteArray getBytes();
 
-    void setBytes(QByteArray *bytes);
+    void setBytes(QByteArray bytes);
 
     int getIndex();
 

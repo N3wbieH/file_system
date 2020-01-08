@@ -14,13 +14,13 @@ private:
     /**
      * 文件分配表项数组
      */
-    vector<item> items;
+    vector<item>* items;
 
     /**
      * 初始化文件分配表
      * @param items 文件分配表的字节数组
      */
-    void init(vector<char> items);
+    void init();
 
     /**
      * 随机获取一个空文件分配表项
@@ -34,7 +34,7 @@ private:
      * 更新分配表的一项
      * @param item 分配表项
      */
-    void updateItem(item *item);
+    void updateItem(item* item);
 
     /**
      * 释放文件分配表项，从一个链中摘除某一项
@@ -49,7 +49,7 @@ public:
      * 初始化文件分配表，包括初始化保留项
      * @param items 文件分配表的字节数组
      */
-    file_allocation_table(vector<char> items);
+    file_allocation_table();
 
     /**
      * 获取以startIndex为起点的文件分配表项列表
@@ -57,7 +57,7 @@ public:
      * @param startIndex 文件分配表起点下标
      * @return startIndex为起点的文件分配表项列表
      */
-    vector<item> getItemsStartWith(int startIndex);
+    vector<item>* getItemsStartWith(int startIndex);
 
     /**
      * 获取一个文件分配表项

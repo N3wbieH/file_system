@@ -1,17 +1,25 @@
 #include "file_allocation_table.h"
 #include "item.h"
-#include "iostream"
+#include "QFile"
+#include "disk_constant.h"
+
 using namespace std;
 
-file_allocation_table::file_allocation_table(vector<char> items) {
-    init(items);
+file_allocation_table::file_allocation_table() {
+    init();
 }
 
-void file_allocation_table::init(vector<char> items) {
-    for (int i = 0; i < static_cast<int>(items.size()); i++) {
-        item item(i, items[static_cast<unsigned long long >(i)]);
-        cout << item.index << " " << item.next << endl;
-        this->items.push_back(item);
+void file_allocation_table::init() {
+    QFile file0(disk_constant::DISK_NAME);
+    file0.open(QIODevice::ReadOnly);
+    char buf[file_allocation_table_constant::LENGTH];
+    file0.read(buf, file_allocation_table_constant::LENGTH);
+    file0.close();
+
+    this->items = new vector<item>(file_allocation_table_constant::LENGTH);
+    for (int i = 0; i < static_cast<int>(items->size()); i++) {
+        item item0(i, buf[i]);
+        this->items->push_back(item0);
     }
 }
 
@@ -26,7 +34,7 @@ item* file_allocation_table::getEmptyItem() {
 }
 
 void file_allocation_table::updateItem(item *item) {
-    items.insert(items.begin() + item->index, *item);
+    (*items)[static_cast<unsigned long long>(item->index)] = *item;
 }
 
 void file_allocation_table::releaseItem(int previous) {
@@ -39,7 +47,7 @@ void file_allocation_table::releaseItem(int previous) {
 }
 
 item* file_allocation_table::getItem(int index) {
-    return &items[static_cast<unsigned long long>(index)];
+    return &(*items)[static_cast<unsigned long long>(index)];
 }
 
 item* file_allocation_table::allocateItem() {
@@ -87,36 +95,35 @@ void file_allocation_table::releaseItemsPreviousWith(int previous) {
 QString file_allocation_table::toString() {
     QString str = "FileAllocationTable{";
     str += "items=";
-    for (vector<item>::iterator it = items.begin(); it != items.end(); ++it) {
+    for (vector<item>::iterator it = items->begin(); it != items->end(); ++it) {
         str += it->toString();
     }
     str += '}';
     return str;
 }
 
-vector<item> file_allocation_table::getItemsStartWith(int startIndex) {
+vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
     // 该下标指向文件分配表项
     if (startIndex < file_allocation_table_constant::NUMBER_OF_FAT_DISK_BLOCKS) {
-        vector<item> vector;
-        vector.push_back(*getItem(startIndex));
-        return vector;
+        vector<item>* vector0 = new vector<item>;
+        vector0->push_back(*getItem(startIndex));
+        return vector0;
     }
 
     // 该磁盘分配表项指向空盘块
     if (getItem(startIndex)->next == file_allocation_table_constant::EMPTY) {
-        vector<item> vector;
-        vector.push_back(*getItem(startIndex));
-        return vector;
+        vector<item>* vector0 = new vector<item>;
+        vector0->push_back(*getItem(startIndex));
+        return vector0;
     }
 
     // 生成该文件的盘块链
-    vector<item> itemList;
+    vector<item>* itemList = new vector<item>;
     item *item0 = getItem(startIndex);
-    itemList.push_back(*item0);
+    itemList->push_back(*item0);
     while (item0->next != file_allocation_table_constant::END) {
-        cout << item0->next << endl;
         item0 = getItem(item0->next);
-        itemList.push_back(*item0);
+        itemList->push_back(*item0);
     }
     return itemList;
 }
