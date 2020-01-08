@@ -23,11 +23,11 @@ void testDiskBlock() {
 
 void testFileAllocationTable() {
     char chars[] = {-1, -1, -1, 4, 9, 0, 7, 8, -1, 12, 11, -1, 13, -1, 0, 0};
-    vector<char> bytes;
-    bytes.assign(chars, chars + 16);
+    vector<char>* bytes = new vector<char>;
+    bytes->assign(chars, chars + 16);
     file_allocation_table fileAllocationTable(bytes);
-    vector<item> items = fileAllocationTable.getItemsStartWith(3);
-    for (vector<item>::iterator it = items.begin(); it != items.end(); it++) {
+    vector<item>* items = fileAllocationTable.getItemsStartWith(3);
+    for (vector<item>::iterator it = items->begin(); it != items->end(); it++) {
         cout << it->next << endl;
     }
 
@@ -50,15 +50,15 @@ void testDiskManager() {
     char buf[file_allocation_table_constant::LENGTH];
     file.read(buf, file_allocation_table_constant::LENGTH);
     file.close();
-    vector<char> bytes;
+    vector<char>* bytes = new vector<char>;
 
     for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
-        bytes.push_back(buf[i]);
+        bytes->push_back(buf[i]);
 //        cout << "dasdas" << endl;
 //        cout << buf[i] << endl;
     }
-    file_allocation_table fileAllocationTable(bytes);
-    disk_manager diskManager(&fileAllocationTable);
+    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
+    disk_manager diskManager(fileAllocationTable);
 }
 
 int main()

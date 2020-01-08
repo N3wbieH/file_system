@@ -68,7 +68,7 @@ public:
      * @param diskBlockList 磁盘块列表
      * @throws IOException IO错误，交给上一层处理
      */
-    void writeDiskBlockList(vector<disk_block> diskBlockList);
+    void writeDiskBlockList(vector<disk_block>* diskBlockList);
 
     /**
      * 释放磁盘块链表，链式的从start下标开始
@@ -109,7 +109,7 @@ public:
      * @param bytes 磁盘块的初始化数据
      * @return DiskBlock 新分配的磁盘块
      */
-    disk_block *allocateDiskBlock(QByteArray *bytes);
+    disk_block *allocateDiskBlock(QByteArray* bytes);
 
     /**
      * 读取一个磁盘块
@@ -127,7 +127,7 @@ public:
      * @return List<DiskBlock> 磁盘块列表
      * @throws IOException IO错误，交给上一层处理
      */
-    vector<disk_block> getDiskBlocksStartWith(int startIndex);
+    vector<disk_block>* getDiskBlocksStartWith(int startIndex);
 
 };
 

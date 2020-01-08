@@ -34,8 +34,7 @@ node* directory_tree::getNode(QString path) {
     node* node0 = root;
     for (int i = 1; i < directories.size(); i++) {
         for (int j = 0; j < static_cast<int>(node0->children->size()); j++) {
-            vector<node>* vector = node0->children;
-            node* child = &vector->data()[j];
+            node* child = &(*node0->children)[static_cast<unsigned long long>(j)];
             // 如果此文件是目录文件且文件名和路径相符合
             if (file_supporter::getFileName(child->file0) == directories[i]) {
                 if (i == directories.size() - 1) {

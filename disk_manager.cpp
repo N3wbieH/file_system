@@ -24,19 +24,20 @@ void disk_manager::writeDiskBlock(QByteArray *bytes0, int offset, int length, in
     file.close();
 }
 
-void disk_manager::writeDiskBlockList(vector<disk_block> diskBlockList) {
-    for (vector<disk_block>::iterator it = diskBlockList.begin(); it != diskBlockList.end(); ++it) {
-        writeDiskBlock(&*it);
+void disk_manager::writeDiskBlockList(vector<disk_block>* diskBlockList) {
+    for (disk_block diskBlock : *diskBlockList) {
+        writeDiskBlock(&diskBlock);
     }
 }
 
 void disk_manager::updateFileAllocationTable() {
     for (int i = 0, j = 0; i < 2; i++) {
-        QByteArray bytes;
+        QByteArray* bytes = new QByteArray;
+        bytes->resize(disk_constant::BLOCK_SIZE);
         for (int k = 0; k < disk_constant::BLOCK_SIZE; k++, j++) {
-            bytes.push_back(static_cast<char>(fileAllocationTable->getItem(j)->next));
+            bytes->push_back(static_cast<char>(fileAllocationTable->getItem(j)->next));
         }
-        writeDiskBlock(new disk_block(i, &bytes));
+        writeDiskBlock(new disk_block(i, bytes));
     }
 }
 
@@ -51,11 +52,11 @@ disk_block* disk_manager::getDiskBlock(int index) {
     return new disk_block(index, &block);
 }
 
-vector<disk_block> disk_manager::getDiskBlocksStartWith(int startIndex) {
-    vector<item> itemList = fileAllocationTable->getItemsStartWith(startIndex);
-    vector<disk_block> diskBlockList;
-    for (auto it = itemList.begin(); it != itemList.end(); it++) {
-        diskBlockList.push_back(*getDiskBlock(it->next));
+vector<disk_block>* disk_manager::getDiskBlocksStartWith(int startIndex) {
+    vector<item>* itemList = fileAllocationTable->getItemsStartWith(startIndex);
+    vector<disk_block>* diskBlockList = new vector<disk_block>;
+    for (item it : *itemList) {
+        diskBlockList->push_back(*getDiskBlock(it.next));
     }
     return diskBlockList;
 }

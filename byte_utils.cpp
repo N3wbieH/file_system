@@ -13,3 +13,21 @@ QByteArray byte_utils::subQByteArray(QByteArray *bytes0, int offset, int length)
     QString qstr0 = QString::fromStdString(str);
     return  qstr0.toLatin1();
 }
+
+bool* byte_utils::byteToBooleans(char b) {
+    bool *booleans = new bool[8];
+    int b0 = b;
+    for (int i = 1; i <= 8; i++) {
+        booleans[8 - i] = b0 % 2;
+        b0 /= 2;
+    }
+    return booleans;
+}
+
+QString byte_utils::bytesToString(QByteArray* bytes, int offset, int length) {
+    char *chars = new char[length];
+    for (int i = 0, j = 0; i < length; i++) {
+        chars[j++] = (*bytes)[i + offset];
+    }
+    return QString("%1").arg(chars);
+}

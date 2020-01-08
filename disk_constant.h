@@ -11,8 +11,6 @@ public:
     disk_constant();
     static const QString DISK_NAME;
 
-//    static const File DISK_FILE = new File(System.getProperty("user.dir"), DISK_NAME);
-
     static const int BLOCK_SIZE = 64;
 };
 
