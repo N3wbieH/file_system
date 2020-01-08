@@ -8,9 +8,11 @@ file_allocation_table::file_allocation_table(vector<char>* items) {
 }
 
 void file_allocation_table::init(vector<char>* items) {
+    this->items = new vector<item>;
+    items->resize(items->size());
     for (int i = 0; i < static_cast<int>(items->size()); i++) {
-        item item(i, (*items)[static_cast<unsigned long long >(i)]);
-        this->items->push_back(item);
+        item item0(i, (*items)[static_cast<unsigned long long >(i)]);
+        this->items->push_back(item0);
     }
 }
 

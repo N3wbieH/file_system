@@ -2,9 +2,11 @@
 #include "disk_constant.h"
 #include "QFile"
 #include<fstream>
-
+#include "iostream"
+using namespace std;
 
 disk_manager::disk_manager(file_allocation_table *fileAllocationTable) : fileAllocationTable(fileAllocationTable){
+
 }
 
 void disk_manager::writeDiskBlock(disk_block *diskBlock) {

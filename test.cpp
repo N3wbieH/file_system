@@ -11,6 +11,8 @@
 #include "file_allocation_table.h"
 #include "disk_manager.h"
 #include "qdatastream.h"
+#include "file_manager.h"
+#include "file.h"
 using namespace std;
 
 void testDiskBlock() {
@@ -46,25 +48,30 @@ void testQByteArray(QByteArray *bytes0, int offset, int length) {
  * 初始化磁盘管理器
  */
 void testDiskManager() {
-    QFile file(disk_constant::DISK_NAME);
-    file.open(QIODevice::ReadOnly);
+    QFile file0(disk_constant::DISK_NAME);
+    file0.open(QIODevice::ReadOnly);
     char buf[file_allocation_table_constant::LENGTH];
-    file.read(buf, file_allocation_table_constant::LENGTH);
-    file.close();
+    file0.read(buf, file_allocation_table_constant::LENGTH);
+    file0.close();
     vector<char>* bytes = new vector<char>;
-
+    bytes->resize(file_allocation_table_constant::LENGTH);
     for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
-//        (*bytes)[i] = buf[i];
-        cout << buf[i] << endl;
+        bytes->push_back(buf[i]);
     }
-//    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
-//    cout << "dasd"<<endl;
-//    disk_manager diskManager(fileAllocationTable);
+
+    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
+    disk_manager diskManager(fileAllocationTable);
+    file_manager fileManager(&diskManager);
+    vector<file>* fileList = fileManager.getFileList("/usr/dir");
+    for (file file1 : *fileList) {
+        cout << file1.getName().toStdString() << endl;
+    }
+   cout << "1111"<< endl;
 }
 
 int main()
 {
     testDiskManager();
-
+    cout << "dasda" << endl;
     return 0;
 }
