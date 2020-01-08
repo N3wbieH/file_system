@@ -2,4 +2,4 @@
 
 disk_constant::disk_constant(){}
 
-const QString disk_constant::DISK_NAME = "./system.disk";
+const QString disk_constant::DISK_NAME = "system.disk";

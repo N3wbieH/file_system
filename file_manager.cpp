@@ -66,14 +66,14 @@ file* file_manager::createFile(QString directoryPath, QString fileName, bool sys
     }
 
     // 解析文件名
-    pair0<QString, QString>* fileName0 = file_supporter::parseFileName(fileName);
+    pair0* fileName0 = file_supporter::parseFileName(fileName);
 
     // 为文件分配一块磁盘块
     QByteArray newByte;
     newByte.push_back(-1);
     disk_block* newDiskBlock = diskManager->allocateDiskBlock(&newByte);
     // 创建文件
-    return createFile(directoryPath, *(fileName0->first), *(fileName0->second), new file_attribute(false, system, true, false),
+    return createFile(directoryPath, fileName0->first, fileName0->second, new file_attribute(false, system, true, false),
             newDiskBlock->getIndex());
 }
 
@@ -145,9 +145,9 @@ file* file_manager::updateFile(QString path, QString newFileName) {
         file_supporter::legalFileName(newFileName);
     }
     // 解析文件名
-    pair0<QString, QString>* fileName = file_supporter::parseFileName(newFileName);
+    pair0* fileName = file_supporter::parseFileName(newFileName);
     // 获取更新后的文件
-    file* file0 = new file(*(fileName->first), *(fileName->second), file1->getFileAttribute(),
+    file* file0 = new file(fileName->first, fileName->second, file1->getFileAttribute(),
             file1->getFirstDiskBlockIndex(), file1->getLength());
     node0->setFile(file0);
     // 获取该文件目录的磁盘块

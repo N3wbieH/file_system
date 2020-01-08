@@ -1,5 +1,5 @@
 #include "file_supporter.h"
-
+#include "pair0.h"
 file_supporter::file_supporter()
 {
 
@@ -196,7 +196,7 @@ int file_supporter::getDiskBlockIndexOfFile(QByteArray* bytes, file* file) {
 }
 
 
-pair0<QString, QString>* file_supporter::parseFileName(QString fileName) {
+pair0* file_supporter::parseFileName(QString fileName) {
     // 寻找 “.”的下标
     int index = fileName.lastIndexOf(file_constant::FILE_NAME_SEPARATOR);
     QString name;
@@ -211,6 +211,6 @@ pair0<QString, QString>* file_supporter::parseFileName(QString fileName) {
         type = QString::fromStdString(fileName.toStdString()
                                       .substr(static_cast<unsigned long long>(index + 1)));
     }
-    return new pair0<QString, QString>(&name, &type);
+    return new pair0(name, type);
 }
 

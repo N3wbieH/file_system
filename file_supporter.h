@@ -127,7 +127,7 @@ public:
      * @param fileName 文件名
      * @return Pair<String, String>
      */
-    static pair0<QString, QString>* parseFileName(QString fileName);
+    static pair0* parseFileName(QString fileName);
     /**
      * 从路径里获取文件名，包括文件类型
      *

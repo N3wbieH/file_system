@@ -10,6 +10,7 @@
 #include "disk_block.h"
 #include "file_allocation_table.h"
 #include "disk_manager.h"
+#include "qdatastream.h"
 using namespace std;
 
 void testDiskBlock() {
@@ -53,12 +54,12 @@ void testDiskManager() {
     vector<char>* bytes = new vector<char>;
 
     for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
-        bytes->push_back(buf[i]);
-//        cout << "dasdas" << endl;
-//        cout << buf[i] << endl;
+//        (*bytes)[i] = buf[i];
+        cout << buf[i] << endl;
     }
-    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
-    disk_manager diskManager(fileAllocationTable);
+//    file_allocation_table* fileAllocationTable = new file_allocation_table(bytes);
+//    cout << "dasd"<<endl;
+//    disk_manager diskManager(fileAllocationTable);
 }
 
 int main()
