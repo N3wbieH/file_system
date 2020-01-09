@@ -3,7 +3,6 @@
 #include "input_dialog.h"
 #include "mainwindow.h"
 #include "txtwindow.h"
-#include <QDebug>
 
 
 item_widget :: item_widget(MainWindow *mainWindow) {
@@ -42,11 +41,10 @@ void item_widget::loadContent() {
     }
     filePath += f->getName();
 
-    if(!f->getFileAttribute()->isDirectory()) {
+    QString type = f->getType();
+    if(type != nullptr && type.length() > 0) {
         filePath +=  "." + f->getType();
     }
-
-    qDebug()<<filePath;
 
     QLayout *layout = this->layout();
 
@@ -129,7 +127,6 @@ void item_widget::dialogSlot(){
 }
 
 void item_widget::openSlot(){
-    qDebug()<<filePath;
     if (f->getFileAttribute()->isDirectory()){
         mainWindow->setCurPath(filePath);
     } else {

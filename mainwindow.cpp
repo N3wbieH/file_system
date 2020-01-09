@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include <QDebug>
 
 using namespace std;
 
@@ -16,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     load();
+
 }
 
 MainWindow::~MainWindow()
@@ -30,7 +30,7 @@ void MainWindow::drawPieChart(int fillAngle) {
     // 设置反锯齿
     painter.setRenderHint(QPainter::Antialiasing);
 
-    QRectF rect_top(570, 70, 210, 140);
+    QRectF rect_top(570, 80, 210, 140);
     painter.setBrush(QColor(qRgb(162,166,151)));
     painter.drawEllipse(rect_top);
 
@@ -83,13 +83,12 @@ void MainWindow::load() {
 
     clearContent(content);
 
-    vector<file> files = *(manager->getFileList(curPath));
-    for (int i = 0; i < files.size(); ++i) {
-        qDebug()<<i;
-        item_widget* item = static_cast<item_widget*>(content->itemAt(i)->widget());
+    vector<file> *files = manager->getFileList(curPath);
+    int i = 0;
+    for (vector<file>::iterator iter = files->begin(); iter != files->end(); ++iter) {
+        item_widget* item = static_cast<item_widget*>(content->itemAt(i++)->widget());
 
-
-        item->setFile(&(files[i]), curPath);
+        item->setFile(&(*iter), curPath);
     }
 }
 
@@ -112,7 +111,6 @@ void MainWindow::on_pathBar_returnPressed()
 {
     QString path = ui->pathBar->text();
     if (manager->getFileList(path) != nullptr) {
-        qDebug()<<path;
         setCurPath(path);
     }
 }
@@ -156,7 +154,6 @@ void MainWindow::deleteFile(QString filePath){
 }
 
 QString MainWindow::readFile(QString filePath) {
-    qDebug()<<filePath;
     return manager->readFile(filePath);
 }
 
