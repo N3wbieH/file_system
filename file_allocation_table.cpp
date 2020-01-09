@@ -47,7 +47,10 @@ void file_allocation_table::releaseItem(int previous) {
 }
 
 item* file_allocation_table::getItem(int index) {
-    return &(*items)[static_cast<unsigned long long>(index)];
+    item* item0 = new item;
+    item0->next = (*items)[static_cast<unsigned long long>(index)].next;
+    item0->index = index;
+    return item0;
 }
 
 item* file_allocation_table::allocateItem() {
@@ -94,6 +97,7 @@ void file_allocation_table::releaseItemsPreviousWith(int previous) {
 
 
 vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
+
     // 该下标指向文件分配表项
     if (startIndex < file_allocation_table_constant::NUMBER_OF_FAT_DISK_BLOCKS) {
         vector<item>* vector0 = new vector<item>;
@@ -103,8 +107,12 @@ vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
 
     // 该磁盘分配表项指向空盘块
     if (getItem(startIndex)->next == file_allocation_table_constant::EMPTY) {
+
         vector<item>* vector0 = new vector<item>;
+        cout << startIndex << endl;
+        cout << getItem(startIndex)->index << endl;
         vector0->push_back(*getItem(startIndex));
+
         return vector0;
     }
 
