@@ -58,10 +58,10 @@ void testDiskManager() {
 //   cout << "1111"<< endl;
 }
 
-int main()
-{
-    testDiskManager();
+//int main()
+//{
+//    testDiskManager();
 
-    return 0;
-}
+//    return 0;
+//}
 

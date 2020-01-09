@@ -3,12 +3,13 @@
 #include "mainwindow.h"
 
 
-input_dialog::input_dialog(MainWindow* mainWindow ,int type ,QWidget *parent) :
+input_dialog::input_dialog(MainWindow* mainWindow, int type, QString filePath,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::input_dialog)
 {
     this->mainWindow = mainWindow;
     this->type = type;
+    this->filePath = filePath;
 
     ui->setupUi(this);
 }
@@ -24,7 +25,7 @@ void input_dialog::on_buttonBox_accepted()
     if (type < 2) {
         mainWindow->newFile(type,name);
     } else {
-        mainWindow->renameFile(name);
+//        mainWindow->renameFile(name);
     }
     close();
 }

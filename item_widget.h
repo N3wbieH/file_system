@@ -5,6 +5,7 @@
 //#include <QWidget>
 #include <QVBoxLayout>
 #include <QMenu>
+#include "file.h"
 
 
 class MainWindow;
@@ -17,7 +18,7 @@ class item_widget : public QWidget {
 public:
     item_widget(MainWindow *mainWindow);
 
-    void setFile(void* f);
+    void setFile(file* f);
 
 private slots:
     void dialogSlot();
@@ -25,7 +26,8 @@ private slots:
     void deleteSlot();
 
 private:
-    void* f = nullptr;
+    file* f = nullptr;
+
     QPixmap *filePic;
     QPixmap *dirPic;
     QMenu *menu;

@@ -7,9 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    manager = new file_manager();
     ui->setupUi(this);
-
-    //    connect(ui->loadButton,SIGNAL(clicked()),this,SLOT(load()));
 
     for (int i = 0; i < 8; ++i) {
         QGridLayout* content =  ui->content;
@@ -44,6 +43,7 @@ void MainWindow::drawPieChart(int fillAngle) {
 }
 
 void MainWindow::paintEvent(QPaintEvent *) {
+    //    manager->
     int use = static_cast<int>(0.5 * 360);
     int total = 1000;
     drawPieChart(use);
@@ -81,17 +81,14 @@ void MainWindow::load() {
 
     clearContent(content);
 
-    static int nums = 8;
-    for (int i = 0; i < nums; ++i) {
+    vector<file>* files = manager->getFileList(curPath);
+    for (int i = 0; i < files->size(); ++i) {
+        qDebug()<<i;
         item_widget* item = static_cast<item_widget*>(content->itemAt(i)->widget());
 
 
-        item->setFile(this);
+        item->setFile(&((*files)[i]));
     }
-
-    nums--;
-
-
 }
 
 void MainWindow::on_backButton_clicked()
@@ -102,22 +99,22 @@ void MainWindow::on_backButton_clicked()
     }
 
     setCurPath(curPath.left(end));
-    qDebug()<<curPath;
 }
 
 
 
 void MainWindow::on_pathBar_returnPressed()
 {
-    if (true) {
-        setCurPath(ui->pathBar->text());
+    QString path = ui->pathBar->text();
+    if (manager->getFileList(path) != nullptr) {
+        qDebug()<<path;
+        setCurPath(path);
     }
 }
 
 
 void MainWindow::saveFile(QString filePath, QString content){
-    qDebug()<<content;
-
+    manager->writeFile(filePath, content);
     update();
 }
 
@@ -129,22 +126,25 @@ void MainWindow::setCurPath(QString path){
 
 void MainWindow::newFile(int type, QString name){
     if (type == 0) {
-       //创建文件
+        //创建文件
+        manager->createFile(curPath, name, false);
     } else {
-       //创建文件夹
+        //创建文件夹
+        manager->createDirectory(curPath, name, false);
     }
 
     load();
     update();
 }
 
-void MainWindow::renameFile(QString name){
-
+void MainWindow::renameFile(QString oldName, QString newName){
+    manager->updateFile(curPath + oldName, newName);
 
     load();
 }
 
 void MainWindow::deleteFile(QString filePath){
+    manager->deleteFile(filePath);
 
     load();
     update();

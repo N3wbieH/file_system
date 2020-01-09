@@ -14,7 +14,7 @@ class input_dialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit input_dialog(MainWindow *mainWindow, int type,QWidget *parent = nullptr);
+    explicit input_dialog(MainWindow *mainWindow, int type,QString filePath = nullptr, QWidget *parent = nullptr);
     ~input_dialog();
 
 private slots:
@@ -24,6 +24,7 @@ private:
     Ui::input_dialog *ui;
     MainWindow *mainWindow;
     int type;
+    QString filePath;
 };
 
 #endif // INPUT_DIALOG_H
