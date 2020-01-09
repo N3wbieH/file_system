@@ -40,7 +40,7 @@ using namespace std;
  */
 void testDiskManager() {
     file_manager fileManager;
-//    file* file0 = fileManager.getFile("/usr");
+    file* file0 = fileManager.getFile("/usr");
     vector<file>* fileVector = fileManager.getFileList("/usr/dir");
     for (vector<file>::iterator file0 = fileVector->begin(); file0 != fileVector->end(); file0++) {
         qDebug() << file0->getName() << endl;
@@ -51,8 +51,9 @@ void testDiskManager() {
 //    if ((file0->getFileAttribute()->isDirectory())) {
 //        cout << "dsadas" << endl;
 //    }
-    QString content = fileManager.readFile("/usr/dir/tx.t");
-    qDebug() << content << endl;
+//    QString content = fileManager.readFile("/usr/dir/tx.t");
+//    qDebug() << content << endl;
+
 //    cout << fileManager.getDiskUsage() << endl;
 
 

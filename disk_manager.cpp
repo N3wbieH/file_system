@@ -4,6 +4,7 @@
 #include<fstream>
 #include "iostream"
 #include "file_constant.h"
+#include "QDebug"
 using namespace std;
 
 disk_manager::disk_manager() {}
@@ -45,11 +46,19 @@ void disk_manager::updateFileAllocationTable() {
 disk_block* disk_manager::getDiskBlock(int index) {
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::ReadOnly);
+    printf("%d-----------------\n", index);
     file.skip(index * disk_constant::BLOCK_SIZE);
-    char buf[disk_constant::BLOCK_SIZE];
+    char* buf = new char[disk_constant::BLOCK_SIZE];
     file.read(buf, disk_constant::BLOCK_SIZE);
+//    for (int i = 0; i < 64; i++) {
+//        printf("%d ", (int)buf[i]);
+//        if ((i % 8) == 7) {
+//            printf("\n");
+//        }
+//    }
     file.close();
     QByteArray* block = new QByteArray(buf, disk_constant::BLOCK_SIZE);
+    delete[] buf;
     return new disk_block(index, *block);
 }
 
