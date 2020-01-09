@@ -126,9 +126,10 @@ vector<file>* file_manager::getFileList(QString directoryPath) {
     if (!node0->getFile()->getFileAttribute()->isDirectory()) {
         return nullptr;
     }
+
     vector<file>* fileList = new vector<file>;
-    for (file child : *fileList) {
-        fileList->push_back(child);
+    for (vector<node>::iterator child = node0->getChildren()->begin(); child != node0->getChildren()->end(); child++) {
+        fileList->push_back(*child->getFile());
     }
     return fileList;
 }
@@ -181,6 +182,7 @@ QByteArray file_manager::readFile(QString path, int length)  {
     if (node0 == nullptr) {
         return nullptr;
     }
+
     // 该路径指向的是一个文件夹
     if (node0->getFile()->getFileAttribute()->isDirectory()) {
         return nullptr;
@@ -193,8 +195,6 @@ QByteArray file_manager::readFile(QString path, int length)  {
             (*diskBlockList)[diskBlockList->size() - 1].getBytes());
     // 申请文件内容的空间
     QByteArray bytes;
-//    bytes.resize(static_cast<int>((diskBlockList->size() - 1) * disk_constant::BLOCK_SIZE +
-//                     static_cast<unsigned long long>(endOfFileSymbolIndex)));
     for (int i = 0; i < static_cast<int>(diskBlockList->size()); i++) {
         QByteArray bytes0 = (*diskBlockList)[static_cast<unsigned long long>(i)].getBytes();
         // 对于最后一个磁盘块只读取到结束标志的下标处
@@ -307,35 +307,14 @@ void file_manager::initDirectory(node* directory) {
     // 把此磁盘块解析成文件列表
     vector<file>* children = file_supporter::parseDiskBlockToFileList(diskBlock);
     // 添加此目录下的所有子节点
-//    for (file child : *children) {
-//        // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
-//        if (child.getFileAttribute()->isDirectory()) {
-//            node* node0 = new node(directory, new vector<node>, &child);
-//            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz" << endl;
-//            // 先把该子节点文件添加到目录里
-//            directoryTree->addNode(directory, node0);
-//            // 再递归调用此方法初始化子节点
-//            initDirectory(node0);
-//            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz end" << endl;
-//        }
-//        // 如果子节点是普通文件，把子节点添加到目录里
-//        else {
-//            node* node0 = new node(directory, nullptr, &child);
-//            // 先把该子节点文件添加到目录里
-//            directoryTree->addNode(directory, node0);
-//        }
-//    }
-
     for (vector<file>::iterator child = children->begin(); child != children->end(); child++) {
         // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
         if (child->getFileAttribute()->isDirectory()) {
             node* node0 = new node(directory, new vector<node>, &*child);
-            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz" << endl;
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);
             // 再递归调用此方法初始化子节点
             initDirectory(node0);
-            cout << node0->getFile()->getName().toStdString() << "!!!!zzzzzzzz end" << endl;
         }
         // 如果子节点是普通文件，把子节点添加到目录里
         else {

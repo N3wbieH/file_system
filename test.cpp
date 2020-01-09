@@ -39,8 +39,18 @@ using namespace std;
  */
 void testDiskManager() {
     file_manager fileManager;
-    file* file0 = fileManager.getFile("/avc.z");
-    cout << file0->getType().toStdString() << endl;
+//    file* file0 = fileManager.getFile("/usr/dir/tx.t");
+//    cout << file0->getType().toStdString() << endl;
+
+//    vector<file>* fileVector = fileManager.getFileList("/usr/dir");
+//    cout << fileVector->size() << endl;
+//    for (vector<file>::iterator file0 = fileVector->begin(); file0 != fileVector->end(); file0++) {
+//        cout << file0->getName().toStdString() << endl;
+//    }
+
+    QString content = fileManager.readFile("/jab.xx");
+    cout << content.toStdString() << endl;
+
 //    vector<file>* fileList = fileManager.getFile("/");
 //    cout << fileList->size() << endl;
 //     cout << fileManager->directoryTree->getRoot()->getFile()->getType().toStdString() << endl;

@@ -16,17 +16,13 @@ int file_supporter::findEmptySpaceOfDiskBlock(QByteArray bytes, int pace, char s
     return -1;
 }
 QString file_supporter::getFileName(file* file) {
-    cout << "getFileName" << endl;
     if (file->getFileAttribute()->isDirectory()) {
-        cout << "getFileName1" << endl;
         QString n = file->getName();
         return n;
     }
     if (file->getType() == "") {
-        cout << "getFileName2" << endl;
         return file->getName();
     }
-    cout << "getFileName3" << endl;
     return file->getName() + file_constant::FILE_NAME_SEPARATOR + file->getType();
 }
 QString file_supporter::getFileName(QString path) {
