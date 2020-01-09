@@ -56,7 +56,7 @@ void testDiskManager() {
 //            }
 //        }
     }
-//    fileManager.createFile("/", "aaa", true);
+    fileManager.createFile("/", "abc", true);
 
 
 //    if ((file0->getFileAttribute()->isDirectory())) {
