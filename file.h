@@ -40,6 +40,8 @@ public:
 
     file(QString name, QString type, file_attribute* fileAttribute, int firstDiskBlockIndex, int length);
 
+    file(const file &file0);
+
     QString getName();
     QString getType();
 

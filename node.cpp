@@ -6,7 +6,6 @@ node::node(node *parent, vector<node>* children, file* file) {
     this->file0 = file;
     this->parent = parent;
     this->children = children;
-
 }
 
 node* node::getParent() {
