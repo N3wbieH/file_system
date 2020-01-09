@@ -46,9 +46,9 @@ void MainWindow::drawPieChart(int fillAngle) {
 
 void MainWindow::paintEvent(QPaintEvent *) {
     //    manager->
-    int use = static_cast<int>(0.5 * 360);
-    int total = 1000;
-    drawPieChart(use);
+    int use = manager->getDiskUsage() * 64;
+    int total = file_allocation_table_constant::LENGTH * 64;
+    drawPieChart (static_cast<int>(use * 1.0 / total * 360));
 
     ui->useLabel->setText(QString::number(use));
     ui->freeLabel->setText(QString::number(total - use));
