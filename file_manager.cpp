@@ -71,9 +71,11 @@ file* file_manager::createFile(QString directoryPath, QString fileName, bool sys
     pair0* fileName0 = file_supporter::parseFileName(fileName);
 
     // 为文件分配一块磁盘块
-    QByteArray newByte;
-    newByte.push_back(-1);
-    disk_block* newDiskBlock = diskManager.allocateDiskBlock(newByte);
+    QByteArray* newByte = new QByteArray();
+    newByte->resize(1);
+    newByte->push_back(-1);
+    disk_block* newDiskBlock = diskManager.allocateDiskBlock(*newByte);
+    qDebug() << newDiskBlock->getIndex();
     // 创建文件
     return createFile(directoryPath, fileName0->first, fileName0->second, new file_attribute(false, system, true, false),
             newDiskBlock->getIndex());
