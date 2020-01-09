@@ -41,11 +41,22 @@ using namespace std;
 void testDiskManager() {
     file_manager fileManager;
     file* file0 = fileManager.getFile("/usr");
-    vector<file>* fileVector = fileManager.getFileList("/usr/dir");
+    vector<file>* fileVector = fileManager.getFileList("/");
     for (vector<file>::iterator file0 = fileVector->begin(); file0 != fileVector->end(); file0++) {
-        qDebug() << file0->getName() << endl;
-    }
+            qDebug() << file0->getName();
+//        if (file0->getFileAttribute()->isDirectory()) {
+//            qDebug() << "---------------";
+//            qDebug() << fileManager.getFile("/" + file0->getName());
+//            qDebug() << fileManager.getFileList("/" + file0->getName())->size();
+//            qDebug() << file0->getName();
+//            vector<file>* fileVector0 = fileManager.getFileList("/" + file0->getName());
+//            for (vector<file>::iterator file1 = fileVector0->begin(); file1 != fileVector0->end(); file1++) {
 
+//                qDebug() << file1->getName() + file1->getType();
+//            }
+//        }
+    }
+//    fileManager.createFile("/", "aaa", true);
 
 
 //    if ((file0->getFileAttribute()->isDirectory())) {
