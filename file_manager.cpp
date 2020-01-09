@@ -1,5 +1,6 @@
 #include "file_manager.h"
 #include "iostream"
+#include "QDebug"
 using namespace std;
 
 file_manager::file_manager() {
@@ -19,8 +20,8 @@ file* file_manager::createDirectory(QString directoryPath, QString directoryName
 
     // 判断文件名是否已经存在此目录下
 
-    for (node child : *(directory->getChildren())) {
-        file* file = child.getFile();
+    for (vector<node>::iterator child = directory->getChildren()->begin(); child != directory->getChildren()->end(); child++) {
+        file* file = child->getFile();
         // 如果文件是目录或者文件的类型是空白
         // 也就是只存在文件名
         if (file->getFileAttribute()->isDirectory() || string_utils::isBlank(file->getType())) {
@@ -51,8 +52,8 @@ file* file_manager::createFile(QString directoryPath, QString fileName, bool sys
     }
 
     // 判断文件名是否已经存在此目录下
-    for (node child : *(directory->getChildren())) {
-        file* file = child.getFile();
+    for (vector<node>::iterator child = directory->getChildren()->begin(); child != directory->getChildren()->end(); child++) {
+        file* file = child->getFile();
         if (file->getFileAttribute()->isDirectory()) {
             // 此文件名已经存在
             if (fileName == file->getName()) {
@@ -293,9 +294,6 @@ void file_manager::init() {
     // 从根节点递归初始化
     initDirectory(directoryTree->getRoot());
 
-    int a = 3;
-    a = a + 1;
-
 }
 
 
@@ -309,6 +307,7 @@ void file_manager::initDirectory(node* directory) {
     for (vector<file>::iterator child = children->begin(); child != children->end(); child++) {
         // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
         if (child->getFileAttribute()->isDirectory()) {
+            qDebug() << child->getName() << endl;
             node* node0 = new node(directory, new vector<node>, &*child);
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);
