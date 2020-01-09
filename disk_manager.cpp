@@ -59,7 +59,6 @@ disk_block* disk_manager::getDiskBlock(int index) {
 
 vector<disk_block>* disk_manager::getDiskBlocksStartWith(int startIndex) {
     vector<item>* itemList = fileAllocationTable.getItemsStartWith(startIndex);
-    cout << (*itemList)[0].index << endl;
     vector<disk_block>* diskBlockList = new vector<disk_block>;
     for (vector<item>::iterator it = itemList->begin(); it != itemList->end(); it++) {
         diskBlockList->push_back(*getDiskBlock(it->index));
@@ -111,4 +110,8 @@ void disk_manager::releaseDiskBlocksStartWith(int start) {
 void disk_manager::releaseDiskBlocksPreviousWith(int previous) {
     fileAllocationTable.releaseItemsPreviousWith(previous);
     updateFileAllocationTable();
+}
+
+int disk_manager::getDiskUsage() {
+    return fileAllocationTable.getDiskUsage();
 }

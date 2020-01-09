@@ -39,17 +39,21 @@ using namespace std;
  */
 void testDiskManager() {
     file_manager fileManager;
-//    file* file0 = fileManager.getFile("/usr/dir/tx.t");
-//    cout << file0->getType().toStdString() << endl;
+    file* file0 = fileManager.getFile("/usr");
+    vector<file>* fileVector = fileManager.getFileList("/usr/dir");
+    for (vector<file>::iterator file0 = fileVector->begin(); file0 != fileVector->end(); file0++) {
+        cout << file0->getName().toStdString() << endl;
+    }
 
-//    vector<file>* fileVector = fileManager.getFileList("/usr/dir");
-//    cout << fileVector->size() << endl;
-//    for (vector<file>::iterator file0 = fileVector->begin(); file0 != fileVector->end(); file0++) {
-//        cout << file0->getName().toStdString() << endl;
-//    }
+    if ((file0->getFileAttribute()->isDirectory())) {
+        cout << "dsadas" << endl;
+    }
 
-    QString content = fileManager.readFile("/jab.xx");
+    QString content = fileManager.readFile("/usr/dir/tx.t");
     cout << content.toStdString() << endl;
+    cout << fileManager.getDiskUsage() << endl;
+
+
 
 //    vector<file>* fileList = fileManager.getFile("/");
 //    cout << fileList->size() << endl;

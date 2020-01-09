@@ -8,7 +8,7 @@
 
 class file_manager
 {
-    public:
+    private:
     /**
      * 磁盘管理器
      */
@@ -17,6 +17,50 @@ class file_manager
      * 目录树
      */
     directory_tree* directoryTree;
+
+    /**
+     * 文件管理器初始化方法
+     */
+    void init();
+
+    /**
+     * 初始化目录，递归调用
+     *
+     * @param directory 目录
+     */
+    void initDirectory(node* directory);
+
+
+    /**
+     * 读取一个文件
+     *
+     * @param path 文件绝对路径
+     * @param length 读取长度
+     * @return 读取的字节
+     */
+    QByteArray readFile(QString path, int length);
+
+
+    /**
+     * 把内容写入文件
+     *
+     * @param path 文件路径
+     * @param bytes 文件内容字节数组
+     */
+    void writeFile(QString path, QByteArray bytes);
+
+    /**
+     * 创建一个文件，会为文件分配一块磁盘块，会添加到磁盘里，并更新文件树
+     *
+     * @param directoryPath 文件的文件夹
+     * @param name 文件名
+     * @param type 文件类型
+     * @param fileAttribute 文件属性
+     * @param firstDiskBlockIndex 第一块磁盘块的下标
+     * @return File 新创建的文件
+     */
+    file* createFile(QString directoryPath, QString name, QString type, file_attribute* fileAttribute,
+                            int firstDiskBlockIndex);
 
 public:
 
@@ -97,46 +141,10 @@ public:
        QString readFile(QString path);
 
        /**
-        * 读取一个文件
-        *
-        * @param path 文件绝对路径
-        * @param length 读取长度
-        * @return 读取的字节
+        * 返回磁盘占用块数
         */
-       QByteArray readFile(QString path, int length);
+       int getDiskUsage();
 
-       /**
-        * 把内容写入文件
-        *
-        * @param path 文件路径
-        * @param bytes 文件内容字节数组
-        */
-       void writeFile(QString path, QByteArray bytes);
-
-       /**
-        * 创建一个文件，会为文件分配一块磁盘块，会添加到磁盘里，并更新文件树
-        *
-        * @param directoryPath 文件的文件夹
-        * @param name 文件名
-        * @param type 文件类型
-        * @param fileAttribute 文件属性
-        * @param firstDiskBlockIndex 第一块磁盘块的下标
-        * @return File 新创建的文件
-        */
-       file* createFile(QString directoryPath, QString name, QString type, file_attribute* fileAttribute,
-                               int firstDiskBlockIndex);
-
-       /**
-        * 文件管理器初始化方法
-        */
-       void init();
-
-       /**
-        * 初始化目录，递归调用
-        *
-        * @param directory 目录
-        */
-       void initDirectory(node* directory);
 
 };
 
