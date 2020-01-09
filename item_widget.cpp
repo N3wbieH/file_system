@@ -3,6 +3,7 @@
 #include "input_dialog.h"
 #include "mainwindow.h"
 #include "txtwindow.h"
+#include <QDebug>
 
 
 item_widget :: item_widget(MainWindow *mainWindow) {
@@ -25,8 +26,9 @@ item_widget :: item_widget(MainWindow *mainWindow) {
     dirPic = new QPixmap(":/image/dir");
 }
 
-void item_widget :: setFile(file * f) {
+void item_widget :: setFile(file * f, QString parent) {
     this->f = f;
+    this->parent = parent;
 
     if (f != nullptr) {
         loadContent();
@@ -34,6 +36,12 @@ void item_widget :: setFile(file * f) {
 }
 
 void item_widget::loadContent() {
+    filePath = parent;
+    if (parent.lastIndexOf('/') != 0) {
+        filePath += "/";
+    }
+    filePath += f->getName();
+
     QLayout *layout = this->layout();
 
     QLabel *imageLabel = new QLabel();
@@ -108,23 +116,23 @@ void item_widget::dialogSlot(){
         dialog = new input_dialog(mainWindow, type);
         dialog->setWindowTitle("新建");
     } else {
-        dialog = new input_dialog(mainWindow, type, f->getName());
+        dialog = new input_dialog(mainWindow, type, filePath);
         dialog->setWindowTitle("重命名");
     }
     dialog->exec();
 }
 
 void item_widget::openSlot(){
-    if (f->getFileAttribute()->isDirectory()) {
-
-        mainWindow->setCurPath("");
+    qDebug()<<filePath;
+    if (f->getFileAttribute()->isDirectory()){
+        mainWindow->setCurPath(filePath);
     } else {
-        txtWindow* window = new txtWindow(mainWindow, "","asdasdsa");
+        txtWindow* window = new txtWindow(mainWindow, filePath);
         window->setWindowTitle(f->getName());
         window->show();
     }
 }
 
 void item_widget::deleteSlot(){
-    mainWindow->deleteFile("");
+    mainWindow->deleteFile(filePath);
 }

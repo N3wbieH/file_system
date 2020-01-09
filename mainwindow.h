@@ -27,6 +27,7 @@ public:
     void newFile(int type, QString name);
     void renameFile(QString oldName, QString newName);
     void deleteFile(QString filePath);
+    QString readFile(QString filePath);
 
 private slots:
     void load();

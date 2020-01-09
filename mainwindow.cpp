@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
         QGridLayout* content =  ui->content;
         content->addWidget(new item_widget(this), i/4, i%4);
     }
+
+    load();
 }
 
 MainWindow::~MainWindow()
@@ -81,13 +83,13 @@ void MainWindow::load() {
 
     clearContent(content);
 
-    vector<file>* files = manager->getFileList(curPath);
-    for (int i = 0; i < files->size(); ++i) {
+    vector<file> files = *(manager->getFileList(curPath));
+    for (int i = 0; i < files.size(); ++i) {
         qDebug()<<i;
         item_widget* item = static_cast<item_widget*>(content->itemAt(i)->widget());
 
 
-        item->setFile(&((*files)[i]));
+        item->setFile(&(files[i]), curPath);
     }
 }
 
@@ -95,7 +97,10 @@ void MainWindow::on_backButton_clicked()
 {
     int end = curPath.lastIndexOf('/');
     if(end <= 0) {
-        return;
+        if (curPath.length() <= 1) {
+            return;
+        }
+        end++;
     }
 
     setCurPath(curPath.left(end));
@@ -137,8 +142,8 @@ void MainWindow::newFile(int type, QString name){
     update();
 }
 
-void MainWindow::renameFile(QString oldName, QString newName){
-    manager->updateFile(curPath + oldName, newName);
+void MainWindow::renameFile(QString filePath, QString newName){
+    manager->updateFile(filePath, newName);
 
     load();
 }
@@ -148,6 +153,10 @@ void MainWindow::deleteFile(QString filePath){
 
     load();
     update();
+}
+
+QString MainWindow::readFile(QString filePath) {
+    return manager->readFile(filePath);
 }
 
 

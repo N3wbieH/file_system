@@ -25,7 +25,7 @@ void input_dialog::on_buttonBox_accepted()
     if (type < 2) {
         mainWindow->newFile(type,name);
     } else {
-//        mainWindow->renameFile(name);
+        mainWindow->renameFile(filePath, name);
     }
     close();
 }

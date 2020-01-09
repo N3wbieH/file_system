@@ -18,7 +18,7 @@ class item_widget : public QWidget {
 public:
     item_widget(MainWindow *mainWindow);
 
-    void setFile(file* f);
+    void setFile(file* f, QString parent = nullptr);
 
 private slots:
     void dialogSlot();
@@ -27,6 +27,8 @@ private slots:
 
 private:
     file* f = nullptr;
+    QString parent;
+    QString filePath;
 
     QPixmap *filePic;
     QPixmap *dirPic;
