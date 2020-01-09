@@ -1,6 +1,7 @@
 #include "txtwindow.h"
 #include "mainwindow.h"
 #include "ui_txtwindow.h"
+#include <QDebug>
 
 txtWindow::txtWindow(MainWindow *mainWindow, QString filePath, QWidget *parent) :
     QMainWindow(parent),
@@ -8,6 +9,8 @@ txtWindow::txtWindow(MainWindow *mainWindow, QString filePath, QWidget *parent) 
 {
     this->mainWindow = mainWindow;
     this->filePath = filePath;
+
+    qDebug()<<filePath;
 
     QString content = mainWindow->readFile(filePath);
     ui->setupUi(this);

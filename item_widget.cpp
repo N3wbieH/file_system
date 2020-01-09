@@ -37,7 +37,7 @@ void item_widget :: setFile(file * f, QString parent) {
 
 void item_widget::loadContent() {
     filePath = parent;
-    if (parent.lastIndexOf('/') != 0) {
+    if (parent.length() > 1) {
         filePath += "/";
     }
     filePath += f->getName();
@@ -127,7 +127,7 @@ void item_widget::openSlot(){
     if (f->getFileAttribute()->isDirectory()){
         mainWindow->setCurPath(filePath);
     } else {
-        txtWindow* window = new txtWindow(mainWindow, filePath);
+        txtWindow* window = new txtWindow(mainWindow, filePath + "." + f->getType());
         window->setWindowTitle(f->getName());
         window->show();
     }

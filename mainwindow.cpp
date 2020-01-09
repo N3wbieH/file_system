@@ -156,6 +156,7 @@ void MainWindow::deleteFile(QString filePath){
 }
 
 QString MainWindow::readFile(QString filePath) {
+    qDebug()<<filePath;
     return manager->readFile(filePath);
 }
 
