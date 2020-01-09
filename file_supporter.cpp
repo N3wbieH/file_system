@@ -48,8 +48,8 @@ vector<file>* file_supporter::parseDiskBlockToFileList(disk_block* diskBlock) {
 }
 
 file* file_supporter::createFileByBytes(QByteArray bytes, int offset) {
-    QString name = byte_utils::bytesToString(bytes, offset, file_constant::SIZE_OF_NAME).trimmed();
-    QString type = byte_utils::bytesToString(bytes, offset + file_constant::SIZE_OF_NAME, file_constant::SIZE_OF_TYPE).trimmed();
+    QString name = byte_utils::bytesToString(bytes, offset, file_constant::SIZE_OF_NAME);
+    QString type = byte_utils::bytesToString(bytes, offset + file_constant::SIZE_OF_NAME, file_constant::SIZE_OF_TYPE);
     file_attribute* fileAttribute = createFileAttributeByByte(bytes[offset + file_constant::SIZE_OF_NAME
             + file_constant::SIZE_OF_TYPE]);
     int firstDiskBlockIndex = bytes[offset + file_constant::SIZE_OF_NAME + file_constant::SIZE_OF_TYPE

@@ -293,9 +293,6 @@ void file_manager::init() {
     // 从根节点递归初始化
     initDirectory(directoryTree->getRoot());
 
-    int a = 3;
-    a = a + 1;
-
 }
 
 
@@ -309,6 +306,7 @@ void file_manager::initDirectory(node* directory) {
     for (vector<file>::iterator child = children->begin(); child != children->end(); child++) {
         // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
         if (child->getFileAttribute()->isDirectory()) {
+            cout << child->getName().toStdString() << endl;
             node* node0 = new node(directory, new vector<node>, &*child);
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);
