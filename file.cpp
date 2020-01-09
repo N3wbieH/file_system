@@ -1,5 +1,7 @@
 #include "file.h"
-
+#include "QString"
+#include "iostream"
+using namespace std;
 
 file::file(QString name, QString type, file_attribute* fileAttribute, int firstDiskBlockIndex, int length) {
     this->name = name;
@@ -10,7 +12,8 @@ file::file(QString name, QString type, file_attribute* fileAttribute, int firstD
 }
 
 QString file::getName() {
-    return name;
+    QString qs = name;
+    return qs;
 }
 
 QString file::getType() {

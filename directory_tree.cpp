@@ -40,14 +40,11 @@ node* directory_tree::getNode(QString path) {
 
     node* node0 = root;
     for (int i = 1; i < directories.size(); i++) {
-        cout << "directories[1].toStdString()" << endl;
         for (int j = 0; j < static_cast<int>(node0->children->size()); j++) {
             vector<node>* children = node0->getChildren();
-            node* child = &(*children)[j];
-
+            node* child = &(*children)[static_cast<unsigned long long>(j)];
             // 如果此文件是目录文件且文件名和路径相符合
             if (file_supporter::getFileName(child->file0) == directories[i]) {
-                cout << "directories[1].toStdString()" << endl;
                 if (i == directories.size() - 1) {
                     return child;
                 }

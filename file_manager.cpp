@@ -108,7 +108,6 @@ void file_manager::deleteFile(QString path) {
 
 file* file_manager::getFile(QString path) {
     node* node = directoryTree->getNode(path);
-    cout << node->getFile()->getName().toStdString() << endl;
     // 找不到该文件
     if (node == nullptr) {
         return nullptr;
@@ -324,4 +323,8 @@ void file_manager::initDirectory(node* directory) {
         }
     }
 
+}
+
+int file_manager::getDiskUsage() {
+     return diskManager.getDiskUsage();
 }

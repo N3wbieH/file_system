@@ -104,6 +104,11 @@ public:
      */
     void releaseItemsPreviousWith(int previous);
 
+    /**
+     * 返回磁盘占用块数
+     */
+    int getDiskUsage();
+
 };
 
 #endif // FILE_ALLOCATION_TABLE_H

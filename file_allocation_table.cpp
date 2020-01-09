@@ -16,11 +16,12 @@ void file_allocation_table::init() {
     char buf[file_allocation_table_constant::LENGTH];
     file0.read(buf, file_allocation_table_constant::LENGTH);
     file0.close();
-    vector<item> items0;
+    vector<item>* items0 = new vector<item>;
+    items0->resize(file_allocation_table_constant::LENGTH);
     for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
-        items0.push_back(*new item(i, static_cast<int>(buf[i])));
+        items0->push_back(*new item(i, static_cast<int>(buf[i])));
     }
-    items = &items0;
+    items = items0;
 }
 
 item* file_allocation_table::getEmptyItem() {
@@ -109,8 +110,6 @@ vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
     if (getItem(startIndex)->next == file_allocation_table_constant::EMPTY) {
 
         vector<item>* vector0 = new vector<item>;
-        cout << startIndex << endl;
-        cout << getItem(startIndex)->index << endl;
         vector0->push_back(*getItem(startIndex));
 
         return vector0;
@@ -127,3 +126,15 @@ vector<item>* file_allocation_table::getItemsStartWith(int startIndex) {
     return itemList;
 }
 
+/**
+ * 返回磁盘占用块数
+ */
+int file_allocation_table::getDiskUsage() {
+    int usageCount = 0;
+    for (vector<item>::iterator it = items->begin(); it != items->end(); it++) {
+        if (it->next != file_allocation_table_constant::EMPTY) {
+            usageCount++;
+        }
+    }
+    return usageCount;
+}

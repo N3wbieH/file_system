@@ -129,6 +129,11 @@ public:
      */
     vector<disk_block>* getDiskBlocksStartWith(int startIndex);
 
+    /**
+     * 返回磁盘占用块数
+     */
+    int getDiskUsage();
+
 };
 
 #endif // DISK_MANAGER_H
