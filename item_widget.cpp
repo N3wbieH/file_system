@@ -42,6 +42,12 @@ void item_widget::loadContent() {
     }
     filePath += f->getName();
 
+    if(!f->getFileAttribute()->isDirectory()) {
+        filePath +=  "." + f->getType();
+    }
+
+    qDebug()<<filePath;
+
     QLayout *layout = this->layout();
 
     QLabel *imageLabel = new QLabel();
@@ -127,7 +133,7 @@ void item_widget::openSlot(){
     if (f->getFileAttribute()->isDirectory()){
         mainWindow->setCurPath(filePath);
     } else {
-        txtWindow* window = new txtWindow(mainWindow, filePath + "." + f->getType());
+        txtWindow* window = new txtWindow(mainWindow, filePath);
         window->setWindowTitle(f->getName());
         window->show();
     }

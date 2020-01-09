@@ -1,6 +1,7 @@
 #include "input_dialog.h"
 #include "ui_input_dialog.h"
 #include "mainwindow.h"
+#include <QDebug>
 
 
 input_dialog::input_dialog(MainWindow* mainWindow, int type, QString filePath,QWidget *parent) :
@@ -12,6 +13,7 @@ input_dialog::input_dialog(MainWindow* mainWindow, int type, QString filePath,QW
     this->filePath = filePath;
 
     ui->setupUi(this);
+    ui->name->setText(filePath.right(filePath.lastIndexOf("/") + 1));
 }
 
 input_dialog::~input_dialog()
