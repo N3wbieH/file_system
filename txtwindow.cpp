@@ -2,13 +2,14 @@
 #include "mainwindow.h"
 #include "ui_txtwindow.h"
 
-txtWindow::txtWindow(MainWindow *mainWindow, QString filePath, QString content, QWidget *parent) :
+txtWindow::txtWindow(MainWindow *mainWindow, QString filePath, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::txtWindow)
 {
     this->mainWindow = mainWindow;
     this->filePath = filePath;
 
+    QString content = mainWindow->readFile(filePath);
     ui->setupUi(this);
     ui->content->setPlainText(content);
 }

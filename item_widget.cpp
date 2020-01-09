@@ -25,8 +25,9 @@ item_widget :: item_widget(MainWindow *mainWindow) {
     dirPic = new QPixmap(":/image/dir");
 }
 
-void item_widget :: setFile(void * f) {
+void item_widget :: setFile(file * f, QString parent) {
     this->f = f;
+    this->parent = parent;
 
     if (f != nullptr) {
         loadContent();
@@ -34,11 +35,22 @@ void item_widget :: setFile(void * f) {
 }
 
 void item_widget::loadContent() {
+    filePath = parent;
+    if (parent.length() > 1) {
+        filePath += "/";
+    }
+    filePath += f->getName();
+
+    QString type = f->getType();
+    if(type != nullptr && type.length() > 0) {
+        filePath +=  "." + f->getType();
+    }
+
     QLayout *layout = this->layout();
 
     QLabel *imageLabel = new QLabel();
     imageLabel->setFixedSize(100, 100);
-    if (false) {
+    if (f->getFileAttribute()->isDirectory()) {
         imageLabel->setPixmap(*dirPic);
     } else {
         imageLabel->setPixmap(*filePic);
@@ -47,11 +59,11 @@ void item_widget::loadContent() {
 
     imageLabel->setAlignment(Qt::AlignCenter);
     imageLabel->setScaledContents(true);
-//    imageLabel->setStyleSheet("background:transparent;border:2px solid red;");
+    //    imageLabel->setStyleSheet("background:transparent;border:2px solid red;");
 
     layout->addWidget(imageLabel);
-    QLabel *nameLabel = new QLabel("aaa");
-//    nameLabel->setStyleSheet("background:transparent;border:2px solid red;");
+    QLabel *nameLabel = new QLabel(f->getName());
+    //    nameLabel->setStyleSheet("background:transparent;border:2px solid red;");
     layout->addWidget(nameLabel);
 
     nameLabel->setAlignment(Qt::AlignCenter);
@@ -103,25 +115,27 @@ void item_widget::dialogSlot(){
     QAction *pEvent = qobject_cast<QAction *>(this->sender());
     int type = pEvent->data().toInt();
 
-    input_dialog* dialog = new input_dialog(mainWindow, type);
+    input_dialog* dialog;
     if(type < 2) {
+        dialog = new input_dialog(mainWindow, type);
         dialog->setWindowTitle("新建");
     } else {
+        dialog = new input_dialog(mainWindow, type, filePath);
         dialog->setWindowTitle("重命名");
     }
     dialog->exec();
 }
 
 void item_widget::openSlot(){
-    if (true) {
-        txtWindow* window = new txtWindow(mainWindow, "","asdasdsa");
-        window->setWindowTitle("aa");
-        window->show();
+    if (f->getFileAttribute()->isDirectory()){
+        mainWindow->setCurPath(filePath);
     } else {
-        mainWindow->setCurPath("");
+        txtWindow* window = new txtWindow(mainWindow, filePath);
+        window->setWindowTitle(f->getName());
+        window->show();
     }
 }
 
 void item_widget::deleteSlot(){
-    mainWindow->deleteFile("");
+    mainWindow->deleteFile(filePath);
 }

@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include <QDebug>
 
 using namespace std;
 
@@ -7,14 +6,16 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    manager = new file_manager();
     ui->setupUi(this);
-
-    //    connect(ui->loadButton,SIGNAL(clicked()),this,SLOT(load()));
 
     for (int i = 0; i < 8; ++i) {
         QGridLayout* content =  ui->content;
         content->addWidget(new item_widget(this), i/4, i%4);
     }
+
+    load();
+
 }
 
 MainWindow::~MainWindow()
@@ -29,7 +30,7 @@ void MainWindow::drawPieChart(int fillAngle) {
     // 设置反锯齿
     painter.setRenderHint(QPainter::Antialiasing);
 
-    QRectF rect_top(570, 70, 210, 140);
+    QRectF rect_top(570, 80, 210, 140);
     painter.setBrush(QColor(qRgb(162,166,151)));
     painter.drawEllipse(rect_top);
 
@@ -44,9 +45,10 @@ void MainWindow::drawPieChart(int fillAngle) {
 }
 
 void MainWindow::paintEvent(QPaintEvent *) {
-    int use = static_cast<int>(0.5 * 360);
-    int total = 1000;
-    drawPieChart(use);
+    //    manager->
+    int use = manager->getDiskUsage() * 64;
+    int total = file_allocation_table_constant::LENGTH * 64;
+    drawPieChart (static_cast<int>(use * 1.0 / total * 360));
 
     ui->useLabel->setText(QString::number(use));
     ui->freeLabel->setText(QString::number(total - use));
@@ -81,43 +83,41 @@ void MainWindow::load() {
 
     clearContent(content);
 
-    static int nums = 8;
-    for (int i = 0; i < nums; ++i) {
-        item_widget* item = static_cast<item_widget*>(content->itemAt(i)->widget());
+    vector<file> *files = manager->getFileList(curPath);
+    int i = 0;
+    for (vector<file>::iterator iter = files->begin(); iter != files->end(); ++iter) {
+        item_widget* item = static_cast<item_widget*>(content->itemAt(i++)->widget());
 
-
-        item->setFile(this);
+        item->setFile(&(*iter), curPath);
     }
-
-    nums--;
-
-
 }
 
 void MainWindow::on_backButton_clicked()
 {
     int end = curPath.lastIndexOf('/');
     if(end <= 0) {
-        return;
+        if (curPath.length() <= 1) {
+            return;
+        }
+        end++;
     }
 
     setCurPath(curPath.left(end));
-    qDebug()<<curPath;
 }
 
 
 
 void MainWindow::on_pathBar_returnPressed()
 {
-    if (true) {
-        setCurPath(ui->pathBar->text());
+    QString path = ui->pathBar->text();
+    if (manager->getFileList(path) != nullptr) {
+        setCurPath(path);
     }
 }
 
 
 void MainWindow::saveFile(QString filePath, QString content){
-    qDebug()<<content;
-
+    manager->writeFile(filePath, content);
     update();
 }
 
@@ -129,25 +129,32 @@ void MainWindow::setCurPath(QString path){
 
 void MainWindow::newFile(int type, QString name){
     if (type == 0) {
-       //创建文件
+        //创建文件
+        manager->createFile(curPath, name, false);
     } else {
-       //创建文件夹
+        //创建文件夹
+        manager->createDirectory(curPath, name, false);
     }
 
     load();
     update();
 }
 
-void MainWindow::renameFile(QString name){
-
+void MainWindow::renameFile(QString filePath, QString newName){
+    manager->updateFile(filePath, newName);
 
     load();
 }
 
 void MainWindow::deleteFile(QString filePath){
+    manager->deleteFile(filePath);
 
     load();
     update();
+}
+
+QString MainWindow::readFile(QString filePath) {
+    return manager->readFile(filePath);
 }
 
 

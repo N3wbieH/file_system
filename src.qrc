@@ -6,4 +6,7 @@
         <file alias="save">image/save.png</file>
         <file alias="txt">image/txt.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>system.disk</file>
+    </qresource>
 </RCC>

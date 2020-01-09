@@ -14,7 +14,7 @@ class txtWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit txtWindow(MainWindow *mainWindow, QString filePath, QString content, QWidget *parent = nullptr);
+    explicit txtWindow(MainWindow *mainWindow, QString filePath, QWidget *parent = nullptr);
     ~txtWindow();
 
 private slots:
