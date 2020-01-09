@@ -1,7 +1,4 @@
 #include "file_manager.h"
-#include "iostream"
-#include "QDebug"
-using namespace std;
 
 file_manager::file_manager() {
     init();
@@ -75,7 +72,6 @@ file* file_manager::createFile(QString directoryPath, QString fileName, bool sys
     newByte->resize(1);
     newByte->push_back(-1);
     disk_block* newDiskBlock = diskManager.allocateDiskBlock(*newByte);
-    qDebug() << newDiskBlock->getIndex();
     // 创建文件
     return createFile(directoryPath, fileName0->first, fileName0->second, new file_attribute(false, system, true, false),
             newDiskBlock->getIndex());
@@ -309,7 +305,6 @@ void file_manager::initDirectory(node* directory) {
     for (vector<file>::iterator child = children->begin(); child != children->end(); child++) {
         // 如果子节点是目录，把子节点添加到目录里，再递归调用初始化子目录
         if (child->getFileAttribute()->isDirectory()) {
-            qDebug() << child->getName() << endl;
             node* node0 = new node(directory, new vector<node>, &*child);
             // 先把该子节点文件添加到目录里
             directoryTree->addNode(directory, node0);

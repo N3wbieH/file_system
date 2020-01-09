@@ -26,10 +26,6 @@ bool* byte_utils::byteToBooleans(char b) {
 }
 
 QString byte_utils::bytesToString(QByteArray bytes, int offset, int length) {
-//    char *chars = new char[length];
-//    for (int i = 0, j = 0; i < length; i++) {
-//        chars[j++] = bytes[i + offset];
-//    }
     QByteArray qb = bytes.mid(offset, length);
     QString string = QString::fromUtf8(qb);
     return string;

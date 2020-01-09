@@ -1,6 +1,4 @@
 #include "directory_tree.h"
-#include "iostream"
-using namespace  std;
 
 const QString directory_tree::SEPARATOR =  "/";
 

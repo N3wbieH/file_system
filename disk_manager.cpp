@@ -2,10 +2,8 @@
 #include "disk_constant.h"
 #include "QFile"
 #include<fstream>
-#include "iostream"
 #include "file_constant.h"
-#include "QDebug"
-using namespace std;
+
 
 disk_manager::disk_manager() {}
 
@@ -18,7 +16,6 @@ void disk_manager::writeDiskBlock(disk_block *diskBlock) {
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::WriteOnly);
     QByteArray bytes = diskBlock ->getBytes();
-    qDebug() << "-----" << bytes.size();
     for (int i = diskBlock->getIndex() * disk_constant::BLOCK_SIZE, j = 0; j < bytes.size(); i++, j++) {
         buf[i] = bytes[j];
     }
@@ -35,9 +32,7 @@ void disk_manager::writeDiskBlock(QByteArray bytes0, int offset, int length, int
     QFile file(disk_constant::DISK_NAME);
     file.open(QIODevice::WriteOnly);
     for (int i = diskBlockIndex * disk_constant::BLOCK_SIZE + boffset, j = offset; j < length; i++, j++) {
-
         buf[i] = bytes0[j];
-        qDebug() << buf[i] << " " << bytes0[j];
     }
     file.write(buf, 8192);
     file.close();
@@ -97,13 +92,11 @@ disk_block* disk_manager::checkAndUpdateFileAllocationTable(item *item) {
 
 disk_block* disk_manager::allocateDiskBlock() {
     item *item0 = fileAllocationTable.allocateItem();
-    qDebug() << item0->next << "zzzzzzz";
     return checkAndUpdateFileAllocationTable(item0);
 }
 
 disk_block* disk_manager::allocateDiskBlock(QByteArray bytes) {
     disk_block *diskBlock = allocateDiskBlock();
-    qDebug() << diskBlock->getIndex();
     // 无法分配到磁盘块
     if (diskBlock == nullptr) {
         return nullptr;

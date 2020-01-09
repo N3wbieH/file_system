@@ -1,50 +1,23 @@
 #include "file_allocation_table.h"
 #include "item.h"
 #include "QFile"
-#include "iostream"
 #include "disk_constant.h"
-#include "QDebug"
-
-using namespace std;
 
 file_allocation_table::file_allocation_table() {
     init();
 }
 
 void file_allocation_table::init() {
-//    QFile file(disk_constant::DISK_NAME);
-//    file.open(QIODevice::ReadOnly);
-//    printf("%d-----------------\n", index);
-//    file.skip(index * disk_constant::BLOCK_SIZE);
-//    char* buf = new char[disk_constant::BLOCK_SIZE];
-//    file.read(buf, disk_constant::BLOCK_SIZE);
-//    for (int i = 0; i < 64; i++) {
-//        printf("%d ", (int)buf[i]);
-//        if ((i % 8) == 7) {
-//            printf("\n");
-//        }
-//    }
-//    file.close();
-//    QByteArray* block = new QByteArray(buf, disk_constant::BLOCK_SIZE);
-//    delete[] buf;
-//    return new disk_block(index, *block);
-
     QFile file0(disk_constant::DISK_NAME);
     file0.open(QIODevice::ReadOnly);
     file0.skip(0);
-//    char* buf = new char[128];
-//    char buf[file_allocation_table_constant::LENGTH];
-//    file0.read(buf, 128);
     QByteArray buf = file0.read(file_allocation_table_constant::LENGTH);
     file0.close();
     vector<item>* items0 = new vector<item>();
-//    items0->resize();
     for (int i = 0; i < file_allocation_table_constant::LENGTH; i++) {
         items0->push_back(*new item(i, static_cast<int>(buf[i])));
-//        qDebug() << (int)buf[i];
     }
     items = items0;
-//    size_t size = str->size();
 
 }
 

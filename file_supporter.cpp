@@ -1,9 +1,5 @@
 #include "file_supporter.h"
 #include "pair0.h"
-#include "stdio.h"
-#include "iostream"
-using namespace std;
-
 
 file_supporter::file_supporter(){}
 
