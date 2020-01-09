@@ -46,12 +46,13 @@ void testDiskManager() {
         qDebug() << file0->getName() << endl;
     }
 
+
+
 //    if ((file0->getFileAttribute()->isDirectory())) {
 //        cout << "dsadas" << endl;
 //    }
-cout << "dsadas" << endl;
-//    QString content = fileManager.readFile("/usr/dir/tx.t");
-//    cout << content.toStdString() << endl;
+    QString content = fileManager.readFile("/usr/dir/tx.t");
+    qDebug() << content << endl;
 //    cout << fileManager.getDiskUsage() << endl;
 
 
