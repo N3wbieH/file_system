@@ -173,9 +173,7 @@ QByteArray file_supporter::getEmptyDirectoryDiskBlock() {
 
 
 int file_supporter::getEndOfFileSymbolIndex(QByteArray bytes) {
-    cout << bytes.toStdString() << endl;
     for (int i = 0; i < bytes.size(); i++) {
-        cout << bytes[i] << endl;
         if (bytes[i] == file_constant::END_OF_FILE) {
             return i;
         }

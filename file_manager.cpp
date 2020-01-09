@@ -173,7 +173,6 @@ void file_manager::writeFile(QString path, QString content) {
 QString file_manager::readFile(QString path) {
     QByteArray bytes = readFile(path, 0);
     QString qs = bytes;
-
     return qs.toUtf8();
 }
 
@@ -191,18 +190,11 @@ QByteArray file_manager::readFile(QString path, int length)  {
 
     // 获取该文件的磁盘块列表
     vector<disk_block>* diskBlockList = diskManager.getDiskBlocksStartWith(node0->getFile()->getFirstDiskBlockIndex());
-    QByteArray qb = (*diskBlockList)[diskBlockList->size() - 1].getBytes();
-//    for (int i = 0; i < 64; i++) {
-//           cout << static_cast<int>(qb[i]) << endl;
-//    }
     // 最后一个磁盘块的文件结束标志下标
     int endOfFileSymbolIndex = file_supporter::getEndOfFileSymbolIndex(
             (*diskBlockList)[diskBlockList->size() - 1].getBytes());
-    cout << endOfFileSymbolIndex << endl;
     // 申请文件内容的空间
     QByteArray bytes;
-//    bytes.resize(static_cast<int>((diskBlockList->size() - 1) * disk_constant::BLOCK_SIZE +
-//                     static_cast<unsigned long long>(endOfFileSymbolIndex)));
     for (int i = 0; i < static_cast<int>(diskBlockList->size()); i++) {
         QByteArray bytes0 = (*diskBlockList)[static_cast<unsigned long long>(i)].getBytes();
         // 对于最后一个磁盘块只读取到结束标志的下标处

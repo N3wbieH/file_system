@@ -48,7 +48,7 @@ void testDiskManager() {
 //        cout << file0->getName().toStdString() << endl;
 //    }
 
-    QString content = fileManager.readFile("/avc.z");
+    QString content = fileManager.readFile("/jab.xx");
     cout << content.toStdString() << endl;
 
 //    vector<file>* fileList = fileManager.getFile("/");
